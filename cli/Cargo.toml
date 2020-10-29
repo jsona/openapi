@@ -3,11 +3,17 @@ name = "jsona-openapi-cli"
 version = "0.1.0"
 authors = ["sigoden <sigoden@gmail.com>"]
 edition = "2018"
+description = "convert jsona to openapi yaml/json"
+documentation = "https://github.com/sigoden/jsona-openapi/tree/master/core"
+repository = "https://github.com/sigoden/jsona-openapi"
+keywords = ["jsona", "openapi", "swagger"]
+license = "MIT"
+readme = "_README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-jsona-openapi = { path = "../core" }
+jsona-openapi = { path = "../core", version = "0.1.0" }
 serde_json = "1.0"
 serde_yaml = "0.8"
 anyhow = "1.0.33"

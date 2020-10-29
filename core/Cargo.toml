@@ -8,7 +8,7 @@ documentation = "https://github.com/sigoden/jsona-openapi/tree/master/core"
 repository = "https://github.com/sigoden/jsona-openapi"
 keywords = ["jsona", "openapi", "swagger"]
 license = "MIT"
-readme = "README.md"
+readme = "_README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -16,4 +16,4 @@ readme = "README.md"
 jsona = "0.1.4"
 serde_json = "1"
 thiserror = "1"
-jsona_openapi_spec = { path = "../spec"}
+jsona_openapi_spec = { path = "../spec", version = "0.1.0" }

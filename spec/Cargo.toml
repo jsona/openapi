@@ -8,7 +8,7 @@ documentation = "https://github.com/sigoden/jsona-openapi/tree/master/spec"
 repository = "https://github.com/sigoden/jsona-openapi"
 keywords = ["jsona", "openapi", "swagger"]
 license = "MIT"
-readme = "README.md"
+readme = "_README.md"
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
