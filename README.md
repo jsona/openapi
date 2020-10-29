@@ -7,6 +7,10 @@ Example of an API definition file api.jsona which defines a single POST endpoint
 ```
 { @openapi({
     openapi: "3.0.0",
+    info: {
+      title: "Sample Api",
+      version: "0.1.0",
+    },
   })
   createUser: { @endpoint({summary: "create a user"})
     route: "POST /users",
@@ -17,7 +21,7 @@ Example of an API definition file api.jsona which defines a single POST endpoint
       }
     },
     res: {
-      body: {
+      200: {
         firstName: "foo",
         lastName: "bar",
         role: "user",
@@ -25,6 +29,7 @@ Example of an API definition file api.jsona which defines a single POST endpoint
     }
   }
 }
+
 ```
 
 The api.jsona will generate openapi doc below

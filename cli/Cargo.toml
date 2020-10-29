@@ -1,0 +1,17 @@
+[package]
+name = "jsona-openapi-cli"
+version = "0.1.0"
+authors = ["sigoden <sigoden@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+jsona-openapi = { path = "../core" }
+serde_json = "1.0"
+serde_yaml = "0.8"
+anyhow = "1.0.33"
+
+[[bin]]
+name = "jsona-openapi"
+path = "src/main.rs"
