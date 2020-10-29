@@ -1,0 +1,99 @@
+{
+  @openapi({
+    openapi: "3.0.0",
+    info: {
+      title: "Sample Api",
+      description: "Optional",
+      version: "0.1.9",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+      },
+    ],
+    security: [
+      { jwt: [] }
+    ],
+    components: {
+      securitySchemes: {
+        jwt: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT"
+        }
+      }
+    }
+  })
+  endpoint1: { @endpoint({summary:"full spec"})
+    route: "POST /a/{}/c/{}",
+    req: {
+      params: {
+        b: "a",
+        c: 3,
+      },
+      header: {
+        'X-App-Key': 'Bearer Axxx...',
+      },
+      query: {
+        kind: 'q', @optional
+      },
+      body: {
+        bool: false,
+        integer: 3, @optional
+        float: 4.3,
+        array1: [ @description("a simple array")
+          '3',
+        ],
+        object1: { @save("object1")
+          a: 3,
+          b: 4,
+        },
+        combine1: [ @schemaCombine("anyOf")
+          { a: 3 },
+          { b: 4 },
+        ] ,
+        combine2: [ @schemaCombine("oneOf")
+          { a: 3 },
+          { b: 4 },
+        ],
+        combine3: [ @schemaCombine("allOf")
+          { a: 3 },
+          { b: 4 },
+        ],
+        time: '2018-11-13T20:20:39Z', @schema({format: "date-time"})
+      }
+    },
+    res: {
+      200: {
+        bool: false,
+        integer: 3,
+        float: 4.3,
+        array1: [
+          '3',
+        ],
+        object1: {
+          a: 3,
+          b: 4,
+        },
+        object2: { @use("object1")
+        }
+      },
+      400: {
+        code: "ErrNoModel",
+        message: "no model",
+      }
+    }
+  },
+  endpoint2: { @endpoint({summary:"no req and res"})
+    route: "GET /a",
+  },
+  endpoint3: { @endpoint({summary:"custom content-type"})
+    route: "POST /a",
+    req: {
+      body: "" @contentType("applicaton/xml")
+    },
+    res: {
+      200: "" @contentType("applicaton/xml")
+    }
+  }
+}
