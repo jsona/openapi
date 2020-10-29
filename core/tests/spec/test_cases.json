@@ -25,7 +25,8 @@
             "name": "b",
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "a"
             },
             "required": true
           },
@@ -34,7 +35,8 @@
             "in": "path",
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "format": "int64",
+              "example": 3
             },
             "required": true
           },
@@ -42,7 +44,8 @@
             "name": "kind",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "q"
             },
             "required": false
           },
@@ -50,7 +53,8 @@
             "name": "X-App-Key",
             "in": "header",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "Bearer Axxx..."
             },
             "required": true
           }
@@ -62,19 +66,23 @@
                 "type": "object",
                 "properties": {
                   "bool": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "example": false
                   },
                   "integer": {
                     "type": "integer",
-                    "format": "int64"
+                    "format": "int64",
+                    "example": 3
                   },
                   "float": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 4.3
                   },
                   "array1": {
                     "description": "a simple array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "3"
                     }
                   },
                   "object1": {
@@ -87,7 +95,8 @@
                         "properties": {
                           "a": {
                             "type": "integer",
-                            "format": "int64"
+                            "format": "int64",
+                            "example": 3
                           }
                         },
                         "required": [
@@ -98,8 +107,8 @@
                         "type": "object",
                         "properties": {
                           "b": {
-                            "type": "integer",
-                            "format": "int64"
+                            "type": "string",
+                            "example": "v"
                           }
                         },
                         "required": [
@@ -115,7 +124,8 @@
                         "properties": {
                           "a": {
                             "type": "integer",
-                            "format": "int64"
+                            "format": "int64",
+                            "example": 3
                           }
                         },
                         "required": [
@@ -126,8 +136,8 @@
                         "type": "object",
                         "properties": {
                           "b": {
-                            "type": "integer",
-                            "format": "int64"
+                            "type": "string",
+                            "example": "v"
                           }
                         },
                         "required": [
@@ -143,7 +153,8 @@
                         "properties": {
                           "a": {
                             "type": "integer",
-                            "format": "int64"
+                            "format": "int64",
+                            "example": 3
                           }
                         },
                         "required": [
@@ -154,8 +165,8 @@
                         "type": "object",
                         "properties": {
                           "b": {
-                            "type": "integer",
-                            "format": "int64"
+                            "type": "string",
+                            "example": "v"
                           }
                         },
                         "required": [
@@ -166,7 +177,8 @@
                   },
                   "time": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "example": "2018-11-13T20:20:39Z"
                   }
                 },
                 "required": [
@@ -193,18 +205,22 @@
                   "type": "object",
                   "properties": {
                     "bool": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "example": false
                     },
                     "integer": {
                       "type": "integer",
-                      "format": "int64"
+                      "format": "int64",
+                      "example": 3
                     },
                     "float": {
-                      "type": "number"
+                      "type": "number",
+                      "example": 4.3
                     },
                     "array1": {
                       "items": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "3"
                       }
                     },
                     "object1": {
@@ -212,11 +228,13 @@
                       "properties": {
                         "a": {
                           "type": "integer",
-                          "format": "int64"
+                          "format": "int64",
+                          "example": 3
                         },
                         "b": {
                           "type": "integer",
-                          "format": "int64"
+                          "format": "int64",
+                          "example": 4
                         }
                       },
                       "required": [
@@ -248,10 +266,12 @@
                   "type": "object",
                   "properties": {
                     "code": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "ErrNoModel"
                     },
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "no model"
                     }
                   },
                   "required": [
@@ -282,7 +302,8 @@
           "content": {
             "applicaton/xml": {
               "schema": {
-                "type": "string"
+                "type": "string",
+                "example": ""
               }
             }
           },
@@ -294,7 +315,8 @@
             "content": {
               "applicaton/xml": {
                 "schema": {
-                  "type": "string"
+                  "type": "string",
+                  "example": ""
                 }
               }
             }
@@ -310,11 +332,13 @@
         "properties": {
           "a": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "example": 3
           },
           "b": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "example": 4
           }
         },
         "required": [

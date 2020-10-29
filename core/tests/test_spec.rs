@@ -1,11 +1,21 @@
-use jsona_openapi::Loader;
+use jsona_openapi::parse;
 
-const SPEC: &str = include_str!("spec/test_spec.jsona");
 #[test]
-fn test_load() {
-    let expect = include_str!("spec/test_spec.json");
-    let spec = Loader::load_from_str(SPEC).unwrap();
+fn test_cases() {
+    let data = include_str!("spec/test_cases.jsona");
+    let expect = include_str!("spec/test_cases.json");
+    let spec = parse(data).unwrap();
     let output = serde_json::to_string_pretty(&spec).unwrap();
-    // print!("{}", output);
+    // println!("{}", output);
+    assert_eq!(expect, output);
+}
+
+#[test]
+fn test_readme_snippet() {
+    let data = include_str!("spec/test_readme_snippet.jsona");
+    let expect = include_str!("spec/test_readme_snippet.json");
+    let spec = parse(data).unwrap();
+    let output = serde_json::to_string_pretty(&spec).unwrap();
+    println!("{}", output);
     assert_eq!(expect, output);
 }

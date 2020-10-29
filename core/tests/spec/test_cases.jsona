@@ -50,15 +50,15 @@
         },
         combine1: [ @schemaCombine("anyOf")
           { a: 3 },
-          { b: 4 },
+          { b: 'v' },
         ] ,
         combine2: [ @schemaCombine("oneOf")
           { a: 3 },
-          { b: 4 },
+          { b: 'v' },
         ],
         combine3: [ @schemaCombine("allOf")
           { a: 3 },
-          { b: 4 },
+          { b: 'v' },
         ],
         time: '2018-11-13T20:20:39Z', @schema({format: "date-time"})
       }

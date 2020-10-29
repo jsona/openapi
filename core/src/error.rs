@@ -2,7 +2,6 @@ use jsona::Error as JsonaError;
 use jsona::Position;
 use thiserror::Error as TError;
 
-/// errors that openapi functions may return
 #[derive(TError, Debug)]
 pub enum Error {
     #[error("{0}")]
@@ -20,6 +19,8 @@ pub enum Error {
         position: Position,
     },
 }
+
+pub type Result<T> = std::result::Result<T, Error>;
 
 impl Error {
     pub fn invalid_annotation<T: ToString>(

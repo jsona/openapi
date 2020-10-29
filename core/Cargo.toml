@@ -3,11 +3,17 @@ name = "jsona-openapi"
 version = "0.1.0"
 authors = ["sigoden <sigoden@gmail.com>"]
 edition = "2018"
+description = "Parse openapi in jsona format"
+documentation = "https://github.com/sigoden/jsona-openapi/tree/master/core"
+repository = "https://github.com/sigoden/jsona-openapi"
+keywords = ["jsona", "openapi", "swagger"]
+license = "MIT"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-jsona = { git = "https://github.com/sigoden/jsona" }
+jsona = "0.1.4"
 serde_json = "1"
 thiserror = "1"
 jsona_openapi_spec = { path = "../spec"}

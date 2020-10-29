@@ -1,6 +1,8 @@
 pub mod error;
 pub mod loader;
 
+#[doc(inline)]
 pub use error::Error;
-pub type Result<T> = std::result::Result<T, Error>;
-pub use loader::Loader;
+
+#[doc(inline)]
+pub use loader::{parse, Loader};

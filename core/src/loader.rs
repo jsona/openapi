@@ -1,10 +1,13 @@
-use crate::{Error, Result};
+use crate::error::{Error, Result};
 use jsona::ast::{self, Annotation, Ast};
 use jsona::Loader as JLoader;
 use jsona::Position;
 use jsona_openapi_spec::*;
 use serde_json::{Map, Value};
 
+pub fn parse(input: &str) -> Result<Spec> {
+    Loader::load_from_str(input)
+}
 pub struct Loader {
     spec: Spec,
 }
@@ -308,15 +311,11 @@ impl Loader {
             let prop_scope = enter_scope(scope, prop.key.as_str());
             let prop_annotations = prop.value.get_annotations();
             let status = prop.key.parse::<u32>().map_err(|_| {
-                Error::invalid_ast(
-                    "is not valid status code",
-                    &prop_scope,
-                    prop.position.clone(),
-                )
+                Error::invalid_ast("should be status code", &prop_scope, prop.position.clone())
             })?;
             if status < 100 || status > 599 {
                 return Err(Error::invalid_ast(
-                    "must in [100, 600)",
+                    "must be integer in [100, 600)",
                     &prop_scope,
                     prop.position.clone(),
                 ));
@@ -397,22 +396,26 @@ impl Loader {
                     "can not be null",
                     scope,
                     value.get_position().clone(),
-                ))
+                ));
             }
             Ast::Boolean(_) => {
                 set_type("boolean");
+                schema.example = Some(value.into());
             }
             Ast::Integer(_) => {
                 set_type("integer");
+                schema.example = Some(value.into());
                 if schema.format.is_none() {
                     schema.format = Some("int64".into());
                 }
             }
             Ast::Float(_) => {
                 set_type("number");
+                schema.example = Some(value.into());
             }
             Ast::String(_) => {
                 set_type("string");
+                schema.example = Some(value.into());
             }
             Ast::Array(ast::Array { elements, .. }) => {
                 let combine = self.parse_schema_combine_annotation(annotations, scope)?;
@@ -665,7 +668,7 @@ fn enter_scope<'a: 'd, 'b: 'd, 'c: 'd, 'd>(scope: &'a [&'b str], current: &'c st
     [scope, &vec![current]].concat()
 }
 
-pub enum MethodKind {
+enum MethodKind {
     GET,
     POST,
     PUT,
@@ -695,7 +698,7 @@ impl MethodKind {
     }
 }
 
-pub enum ComponentKind {
+enum ComponentKind {
     Schema,
     Parameter,
 }

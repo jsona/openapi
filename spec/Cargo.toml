@@ -3,8 +3,12 @@ name = "jsona_openapi_spec"
 version = "0.1.0"
 authors = ["sigoden <sigoden@gmail.com>"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "Openapi type definitions"
+documentation = "https://github.com/sigoden/jsona-openapi/tree/master/spec"
+repository = "https://github.com/sigoden/jsona-openapi"
+keywords = ["jsona", "openapi", "swagger"]
+license = "MIT"
+readme = "README.md"
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
