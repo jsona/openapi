@@ -343,7 +343,7 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
         }
     },
     getUserByName: { @endpoint({summary:"Get user by user name",tags:["user"]})
-        route: "GET /user/{}"
+        route: "GET /user/{}",
         req: {
             params: {
                 username: "Jonh",
