@@ -5,13 +5,7 @@ Jsona openapi is a concise, developer-friendly way to describe your API contract
 Example of an API definition file api.jsona which defines a single POST endpoint to create a user:
 
 ```
-{ @openapi({
-    openapi: "3.0.0",
-    info: {
-      title: "Sample Api",
-      version: "0.1.0",
-    },
-  })
+{ @openapi
   createUser: { @endpoint({summary: "create a user"})
     route: "POST /users",
     req: {
@@ -38,7 +32,7 @@ The api.jsona will generate openapi doc below
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Sample Api",
+    "title": "openapi",
     "version": "0.1.0"
   },
   "paths": {

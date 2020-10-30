@@ -16,6 +16,6 @@ fn test_readme_snippet() {
     let expect = include_str!("spec/test_readme_snippet.json");
     let spec = parse(data).unwrap();
     let output = serde_json::to_string_pretty(&spec).unwrap();
-    println!("{}", output);
+    // println!("{}", output);
     assert_eq!(expect, output);
 }

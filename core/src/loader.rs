@@ -47,6 +47,20 @@ impl Loader {
         }
     }
     fn load_openapi(value: &Value, position: Position) -> Result<Spec> {
+        let default_version: String = "3.0.0".into();
+        let default_info = Info {
+            title: "openapi".into(),
+            version: "0.1.0".into(),
+            ..Default::default()
+        };
+
+        if value.is_null() {
+            return Ok(Spec {
+                openapi: default_version,
+                info: default_info,
+                ..Default::default()
+            });
+        }
         if !value.is_object() {
             return Err(Error::invalid_annotation(
                 "must be object",
@@ -55,18 +69,25 @@ impl Loader {
                 position,
             ));
         }
+
         let mut value = value.clone();
+
+        if let Value::Object(ref mut obj) = value {
+            if obj.get("info").is_none() {
+                obj.insert("info".into(), serde_json::to_value(&default_info).unwrap());
+            }
+            if obj.get("openapi").is_none() {
+                obj.insert(
+                    "openapi".into(),
+                    serde_json::to_value(&default_version).unwrap(),
+                );
+            }
+        }
         if let Value::Object(ref mut v) = value {
             v.insert("paths".into(), Value::Object(Map::new()));
         }
-        serde_json::from_value(value).map_err(|_| {
-            Error::invalid_annotation(
-                "is invalid",
-                "openapi",
-                &[],
-                position,
-            )
-        })
+        serde_json::from_value(value)
+            .map_err(|_| Error::invalid_annotation("is invalid", "openapi", &[], position))
     }
     fn parse_endpoint(&mut self, prop: &ast::Property) -> Result<()> {
         let operation_id = prop.key.as_str();
@@ -128,12 +149,7 @@ impl Loader {
                 .unwrap()
                 .insert("responses".into(), Value::Object(Default::default()));
             serde_json::from_value(value).map_err(|_| {
-                Error::invalid_annotation(
-                    "is invalid",
-                    "endpoint",
-                    &scope,
-                    position.clone(),
-                )
+                Error::invalid_annotation("is invalid", "endpoint", &scope, position.clone())
             })
         } else {
             Ok(Operation::default())
@@ -547,12 +563,7 @@ impl Loader {
             }) => {
                 if value.is_object() {
                     let schema = serde_json::from_value(value.clone()).map_err(|_| {
-                        Error::invalid_annotation(
-                            "is invalid",
-                            name,
-                            &[],
-                            position.clone(),
-                        )
+                        Error::invalid_annotation("is invalid", name, &[], position.clone())
                     })?;
                     Ok(Some(schema))
                 } else {

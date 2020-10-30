@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Sample Api",
+    "title": "openapi",
     "version": "0.1.0"
   },
   "paths": {
