@@ -345,7 +345,11 @@ impl Loader {
                 ..Default::default()
             };
 
-            let with_header = prop_annotations.iter().find(|v| v.name == "withHeader").map(|_| true).unwrap_or(false);
+            let with_header = prop_annotations
+                .iter()
+                .find(|v| v.name == "withHeader")
+                .map(|_| true)
+                .unwrap_or(false);
 
             if with_header {
                 if !prop.value.is_object() {
@@ -424,12 +428,15 @@ impl Loader {
         let value = value.as_object().unwrap();
         for prop in value.properties.iter() {
             let annotations = prop.value.get_annotations();
-            let mut header  = Header::default();
+            let mut header = Header::default();
             header.description = self.parse_description_annnotation(annotations, scope)?;
             header.required = Some(!self.parse_optional_annnotation(annotations, scope));
             header.schema = Some(self.parse_schema(&prop.value, true, scope)?);
             let header_object = ObjectOrReference::Object(header);
-            response.headers.get_or_insert(Default::default()).insert(prop.key.clone(), header_object);
+            response
+                .headers
+                .get_or_insert(Default::default())
+                .insert(prop.key.clone(), header_object);
         }
         Ok(())
     }
