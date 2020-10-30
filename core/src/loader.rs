@@ -1,15 +1,18 @@
 use crate::error::{Error, Result};
+use std::collections::HashSet;
 use jsona::ast::{self, Annotation, Ast};
 use jsona::Loader as JLoader;
 use jsona::Position;
 use jsona_openapi_spec::*;
 use serde_json::{Map, Value};
+use std::fmt;
 
 pub fn parse(input: &str) -> Result<Spec> {
     Loader::load_from_str(input)
 }
 pub struct Loader {
     spec: Spec,
+    routes: HashSet<String>,
 }
 
 impl Loader {
@@ -24,7 +27,7 @@ impl Loader {
             .find(|annotation| annotation.name == "openapi")
         {
             let spec = Self::load_openapi(&openapi.value, openapi.position)?;
-            let mut loader = Loader { spec };
+            let mut loader = Loader { spec, routes: Default::default() };
             if let Ast::Object(ast::Object { properties, .. }) = &ast {
                 properties
                     .iter()
@@ -168,7 +171,16 @@ impl Loader {
                     return Err(err());
                 }
                 let method = MethodKind::from_str(splited_route[0]).ok_or(err())?;
-                let path_parts: Vec<&str> = splited_route[1].trim().split("/").collect();
+                let path =splited_route[1].trim();
+                let path_parts: Vec<&str> = path.split("/").collect();
+                let cononcial_route = format!("{} {}", method.to_string(), path);
+                if !self.routes.insert(cononcial_route) {
+                    return Err(Error::invalid_ast(
+                        "is conflict",
+                        &scope,
+                        route.position.clone(),
+                    ))
+                }
                 Ok((method, path_parts))
             }
             Some(route) => Err(Error::invalid_ast(
@@ -788,6 +800,18 @@ impl MethodKind {
             MethodKind::DELETE => path_item.delete = Some(operation),
             MethodKind::PATCH => path_item.patch = Some(operation),
         };
+    }
+}
+
+impl fmt::Display for MethodKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            MethodKind::GET => write!(f, "get"),
+            MethodKind::POST => write!(f, "post"),
+            MethodKind::PUT => write!(f, "put"),
+            MethodKind::DELETE => write!(f, "delete"),
+            MethodKind::PATCH => write!(f, "patch"),
+        }
     }
 }
 
