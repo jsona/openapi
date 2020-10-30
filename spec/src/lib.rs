@@ -557,39 +557,29 @@ pub struct Response {
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#headerObject>.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
 pub struct Header {
-    // FIXME: Is the third change properly implemented?
-    // FIXME: Merge `ObjectOrReference<Header>::Reference` and `ParameterOrRef::Reference`
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub required: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub schema: Option<Schema>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "uniqueItems")]
-    pub unique_items: Option<bool>,
-    /// string, number, boolean, integer, array, file ( only for formData )
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "type")]
-    pub param_type: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub format: Option<String>,
     /// A brief description of the parameter. This could contain examples
     /// of use.  GitHub Flavored Markdown is allowed.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
-    // collectionFormat: ???
-    // default: ???
-    // maximum ?
-    // exclusiveMaximum ??
-    // minimum ??
-    // exclusiveMinimum ??
-    // maxLength ??
-    // minLength ??
-    // pattern ??
-    // maxItems ??
-    // minItems ??
-    // enum ??
-    // multipleOf ??
-    // allowEmptyValue ( for query / body params )
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub schema: Option<Schema>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub required: Option<bool>,
+    /// Specifies that a parameter is deprecated and SHOULD be transitioned out of usage. Default value is false.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deprecated: Option<bool>,
+    /// Describes how the parameter value will be serialized depending on the type of the parameter
+    /// value. Default values (based on value of in): for `query` - `form`; for `path` - `simple`; for
+    /// `header` - `simple`; for cookie - `form`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub style: Option<ParameterStyle>,
+    /// When this is true, parameter values of type array or object generate separate parameters
+    /// for each value of the array or key-value pair of the map.
+    /// For other types of parameters this property has no effect.
+    /// When style is form, the default value is true.
+    /// For all other styles, the default value is false.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub explode: Option<bool>,
 }
 
 /// Describes a single request body.
