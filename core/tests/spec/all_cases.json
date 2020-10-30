@@ -88,93 +88,6 @@
                   "object1": {
                     "$ref": "#/components/schemas/object1"
                   },
-                  "combine1": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "a": {
-                            "type": "integer",
-                            "format": "int64",
-                            "example": 3
-                          }
-                        },
-                        "required": [
-                          "a"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "b": {
-                            "type": "string",
-                            "example": "v"
-                          }
-                        },
-                        "required": [
-                          "b"
-                        ]
-                      }
-                    ]
-                  },
-                  "combine2": {
-                    "oneOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "a": {
-                            "type": "integer",
-                            "format": "int64",
-                            "example": 3
-                          }
-                        },
-                        "required": [
-                          "a"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "b": {
-                            "type": "string",
-                            "example": "v"
-                          }
-                        },
-                        "required": [
-                          "b"
-                        ]
-                      }
-                    ]
-                  },
-                  "combine3": {
-                    "allOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "a": {
-                            "type": "integer",
-                            "format": "int64",
-                            "example": 3
-                          }
-                        },
-                        "required": [
-                          "a"
-                        ]
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "b": {
-                            "type": "string",
-                            "example": "v"
-                          }
-                        },
-                        "required": [
-                          "b"
-                        ]
-                      }
-                    ]
-                  },
                   "time": {
                     "type": "string",
                     "format": "date-time",
@@ -186,9 +99,6 @@
                   "float",
                   "array1",
                   "object1",
-                  "combine1",
-                  "combine2",
-                  "combine3",
                   "time"
                 ]
               }
@@ -285,7 +195,7 @@
         }
       }
     },
-    "/a": {
+    "/endpoint2": {
       "get": {
         "summary": "no req and res",
         "operationId": "endpoint2",
@@ -294,7 +204,9 @@
             "description": "-"
           }
         }
-      },
+      }
+    },
+    "/endpoint3": {
       "post": {
         "summary": "custom content-type",
         "operationId": "endpoint3",
@@ -314,6 +226,157 @@
             "description": "-",
             "content": {
               "applicaton/xml": {
+                "schema": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/endpoint4": {
+      "get": {
+        "summary": "custom response header",
+        "operationId": "endpoint4",
+        "responses": {
+          "200": {
+            "description": "-",
+            "headers": {
+              "X-RateLimit": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 10
+                },
+                "required": true
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/endpoint5": {
+      "post": {
+        "summary": "combine schema",
+        "operationId": "endpoint5",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "combine1": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "a": {
+                            "type": "integer",
+                            "format": "int64",
+                            "example": 3
+                          }
+                        },
+                        "required": [
+                          "a"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "b": {
+                            "type": "string",
+                            "example": "v"
+                          }
+                        },
+                        "required": [
+                          "b"
+                        ]
+                      }
+                    ]
+                  },
+                  "combine2": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "a": {
+                            "type": "integer",
+                            "format": "int64",
+                            "example": 3
+                          }
+                        },
+                        "required": [
+                          "a"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "b": {
+                            "type": "string",
+                            "example": "v"
+                          }
+                        },
+                        "required": [
+                          "b"
+                        ]
+                      }
+                    ]
+                  },
+                  "combine3": {
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "a": {
+                            "type": "integer",
+                            "format": "int64",
+                            "example": 3
+                          }
+                        },
+                        "required": [
+                          "a"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "b": {
+                            "type": "string",
+                            "example": "v"
+                          }
+                        },
+                        "required": [
+                          "b"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "combine1",
+                  "combine2",
+                  "combine3"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "-",
+            "content": {
+              "application/json": {
                 "schema": {
                   "type": "string",
                   "example": ""

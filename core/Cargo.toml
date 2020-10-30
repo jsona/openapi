@@ -1,6 +1,6 @@
 [package]
 name = "jsona-openapi"
-version = "0.1.2"
+version = "0.1.4"
 authors = ["sigoden <sigoden@gmail.com>"]
 edition = "2018"
 description = "Parse openapi in jsona format"
@@ -13,7 +13,7 @@ readme = "_README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-jsona = { version = "0.1.8" }
+jsona = { version = "0.1.10" }
 serde_json = "1"
 thiserror = "1"
 jsona_openapi_spec = { path = "../spec", version = "0.1.0" }

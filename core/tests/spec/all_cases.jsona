@@ -48,18 +48,6 @@
           a: 3,
           b: 4,
         },
-        combine1: [ @schemaCombine("anyOf")
-          { a: 3 },
-          { b: 'v' },
-        ] ,
-        combine2: [ @schemaCombine("oneOf")
-          { a: 3 },
-          { b: 'v' },
-        ],
-        combine3: [ @schemaCombine("allOf")
-          { a: 3 },
-          { b: 'v' },
-        ],
         time: '2018-11-13T20:20:39Z', @schema({format: "date-time"})
       }
     },
@@ -85,15 +73,49 @@
     }
   },
   endpoint2: { @endpoint({summary:"no req and res"})
-    route: "GET /a",
+    route: "GET /endpoint2",
   },
   endpoint3: { @endpoint({summary:"custom content-type"})
-    route: "POST /a",
+    route: "POST /endpoint3",
     req: {
       body: "" @contentType("applicaton/xml")
     },
     res: {
       200: "" @contentType("applicaton/xml")
+    }
+  },
+  endpoint4: { @endpoint({summary:"custom response header"})
+    route: "GET /endpoint4",
+    res: {
+      200: { @withHeader
+        header: {
+          'X-RateLimit': 10,
+        },
+        body: {
+        }
+      }
+    }
+  },
+  endpoint5: { @endpoint({summary:"combine schema"})
+    route: "POST /endpoint5",
+    req: {
+      body: {
+        combine1: [ @schemaCombine("anyOf")
+          { a: 3 },
+          { b: 'v' },
+        ] ,
+        combine2: [ @schemaCombine("oneOf")
+          { a: 3 },
+          { b: 'v' },
+        ],
+        combine3: [ @schemaCombine("allOf")
+          { a: 3 },
+          { b: 'v' },
+        ],
+      }
+    },
+    res: {
+      200: "",
     }
   }
 }

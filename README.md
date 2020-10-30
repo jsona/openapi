@@ -23,77 +23,82 @@ Example of an API definition file api.jsona which defines a single POST endpoint
     }
   }
 }
-
 ```
 
-The api.jsona will generate openapi doc below
+You can view generated openapi doc and swagger ui in [here](https://sigoden.github.io/jsona-openapi/?source=https://raw.githubusercontent.com/sigoden/jsona-openapi/master/core/tests/spec/readme_snippet.jsona)
+
+A [peetstore](https://sigoden.github.io/jsona-openapi/?source=https://raw.githubusercontent.com/sigoden/jsona-openapi/master/core/tests/spec/petstore.jsona) is avaiable.
+
+## Annotation
+
+### @openapi
+
+[OpenapiObject](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#openapi-object) provide the root object of the OpenAPI document. 
+
+```
+  @openapi({
+    openapi: "3.0.0",
+    info: {
+      title: "Sample Api",
+      description: "Optional",
+      version: "0.1.9",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+      },
+    ],
+    security: [
+      { jwt: [] }
+    ],
+    components: {
+      securitySchemes: {
+        jwt: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT"
+        }
+      }
+    }
+  })
+```
+
+### @schema
+[SchemaObject](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#schemaObject) allows the definition of input and output data types. it will be merged with generated schema
 
 ```
 {
-  "openapi": "3.0.0",
-  "info": {
-    "title": "openapi",
-    "version": "0.1.0"
-  },
-  "paths": {
-    "/users": {
-      "post": {
-        "summary": "create a user",
-        "operationId": "createUser",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "firstName": {
-                    "type": "string",
-                    "example": "foo"
-                  },
-                  "lastName": {
-                    "type": "string",
-                    "example": "bar"
-                  }
-                },
-                "required": [
-                  "firstName",
-                  "lastName"
-                ]
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "-",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "firstName": {
-                      "type": "string",
-                      "example": "foo"
-                    },
-                    "lastName": {
-                      "type": "string",
-                      "example": "bar"
-                    },
-                    "role": {
-                      "type": "string",
-                      "example": "user"
-                    }
-                  },
-                  "required": [
-                    "firstName",
-                    "lastName",
-                    "role"
-                  ]
-                }
-              }
-            }
-          }
+  endpoint1: {
+    req: {
+      body: {
+        user: {
+          email: "postmaster@example.com", @schema(format:"email")
+        }
+      }
+    }
+  }
+}
+```
+
+### @save/@use
+
+`@save`: save generated schema to components
+`@use`: use the schema in components
+
+```
+{
+  endpoint1: {
+    req: {
+      body: {
+        category: { @save("Category")
+          id: "",
+          title: "",
+        }
+      }
+    },
+    res: {
+      200: {
+        category: { @use("Category")
         }
       }
     }

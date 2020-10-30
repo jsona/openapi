@@ -54,9 +54,9 @@ checksum = "dc6f3ad7b9d11a0c00842ff8de1b60ee58661048eb8049ed33c73594f359d7e6"
 
 [[package]]
 name = "jsona"
-version = "0.1.8"
+version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2107a9605d2aa4388be9aba83481fddd7f6754f5ab5e9d919032b4400b92f893"
+checksum = "1d5264bb17c96e9701660aea5085a471cf8243c5c7c15608ea1241014de03b75"
 dependencies = [
  "serde",
  "serde_json",
@@ -64,7 +64,7 @@ dependencies = [
 
 [[package]]
 name = "jsona-openapi"
-version = "0.1.2"
+version = "0.1.4"
 dependencies = [
  "jsona",
  "jsona_openapi_spec",
@@ -85,7 +85,7 @@ dependencies = [
 
 [[package]]
 name = "jsona_openapi_spec"
-version = "0.1.0"
+version = "0.1.2"
 dependencies = [
  "indexmap",
  "serde",
