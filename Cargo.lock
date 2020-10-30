@@ -54,9 +54,7 @@ checksum = "dc6f3ad7b9d11a0c00842ff8de1b60ee58661048eb8049ed33c73594f359d7e6"
 
 [[package]]
 name = "jsona"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "78e2b93c17e2caae79235e4653b4eb0abf6c09f8a38e8ca604dd6cbbbf54e0ad"
+version = "0.1.6"
 dependencies = [
  "serde",
  "serde_json",
@@ -68,6 +66,7 @@ version = "0.1.0"
 dependencies = [
  "jsona",
  "jsona_openapi_spec",
+ "serde",
  "serde_json",
  "thiserror",
 ]

@@ -61,7 +61,7 @@ impl Loader {
         }
         serde_json::from_value(value).map_err(|_| {
             Error::invalid_annotation(
-                "does not match target data structure",
+                "is invalid",
                 "openapi",
                 &[],
                 position,
@@ -129,7 +129,7 @@ impl Loader {
                 .insert("responses".into(), Value::Object(Default::default()));
             serde_json::from_value(value).map_err(|_| {
                 Error::invalid_annotation(
-                    "does not match target data structure",
+                    "is invalid",
                     "endpoint",
                     &scope,
                     position.clone(),
@@ -548,7 +548,7 @@ impl Loader {
                 if value.is_object() {
                     let schema = serde_json::from_value(value.clone()).map_err(|_| {
                         Error::invalid_annotation(
-                            "does not match target data structure",
+                            "is invalid",
                             name,
                             &[],
                             position.clone(),

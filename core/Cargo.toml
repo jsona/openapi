@@ -13,7 +13,8 @@ readme = "_README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-jsona = "0.1.4"
+jsona = { version = "0.1.8" }
 serde_json = "1"
 thiserror = "1"
 jsona_openapi_spec = { path = "../spec", version = "0.1.0" }
+serde = { version = "1.0", features = ["derive"] }
