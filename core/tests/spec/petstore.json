@@ -434,6 +434,41 @@
         }
       }
     },
+    "/store/inventory": {
+      "post": {
+        "tags": [
+          "store"
+        ],
+        "summary": "Returns pet inventories by status",
+        "operationId": "getInventory",
+        "x-swagger-router-controller": "OrderController",
+        "responses": {
+          "200": {
+            "description": "-",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "additionalProperties": {
+                      "type": "integer",
+                      "format": "int64",
+                      "example": 0
+                    }
+                  },
+                  "required": [
+                    "additionalProperties"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": {
+          "api_key": []
+        }
+      }
+    },
     "/store/order": {
       "post": {
         "tags": [
@@ -441,6 +476,7 @@
         ],
         "summary": "Returns pet inventories by status",
         "operationId": "placeOrder",
+        "x-swagger-router-controller": "OrderController",
         "requestBody": {
           "content": {
             "application/json": {
@@ -472,6 +508,7 @@
         ],
         "summary": "Find purchase order by ID",
         "operationId": "getOrderById",
+        "x-swagger-router-controller": "OrderController",
         "parameters": [
           {
             "name": "orderId",
@@ -527,6 +564,7 @@
         ],
         "summary": "Delete purchase order by ID",
         "operationId": "deleteOrder",
+        "x-swagger-router-controller": "OrderController",
         "parameters": [
           {
             "name": "orderId",

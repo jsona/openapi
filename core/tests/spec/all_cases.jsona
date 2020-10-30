@@ -117,5 +117,8 @@
     res: {
       200: "",
     }
+  },
+  endpoint6: { @endpoint({summary:"operation x-*","x-swagger-router-controller":"OrderController"})
+    route: "GET /endpoint6",
   }
 }

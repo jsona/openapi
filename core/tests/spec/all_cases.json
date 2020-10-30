@@ -386,6 +386,18 @@
           }
         }
       }
+    },
+    "/endpoint6": {
+      "get": {
+        "summary": "operation x-*",
+        "operationId": "endpoint6",
+        "x-swagger-router-controller": "OrderController",
+        "responses": {
+          "200": {
+            "description": "-"
+          }
+        }
+      }
     }
   },
   "components": {

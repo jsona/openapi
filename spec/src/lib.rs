@@ -263,6 +263,9 @@ pub struct Operation {
     #[serde(skip_serializing_if = "Option::is_none", rename = "operationId")]
     pub operation_id: Option<String>,
 
+    #[serde(flatten, skip_serializing_if = "Option::is_none")]
+    pub extensions: Option<IndexMap<String, serde_json::Value>>,
+
     /// A list of parameters that are applicable for this operation. If a parameter is already
     /// defined at the
     /// [Path Item](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#pathItemParameters),
