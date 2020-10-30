@@ -36,31 +36,25 @@ A [peetstore](https://sigoden.github.io/jsona-openapi/?source=https://raw.github
 [OpenapiObject](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.1.0.md#openapi-object) provide the root object of the OpenAPI document. 
 
 ```
-  @openapi({
-    openapi: "3.0.0",
-    info: {
-      title: "Sample Api",
-      description: "Optional",
-      version: "0.1.9",
+{ @openapi
+  createUser: { @endpoint({summary: "create a user"})
+    route: "POST /users",
+    req: {
+      body: {
+        firstName: "foo",
+        lastName: "bar",
+      }
     },
-    servers: [
-      {
-        url: "http://localhost:3000",
-      },
-    ],
-    security: [
-      { jwt: [] }
-    ],
-    components: {
-      securitySchemes: {
-        jwt: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT"
-        }
+    res: {
+      200: {
+        firstName: "foo",
+        lastName: "bar",
+        role: "user",
       }
     }
-  })
+  }
+}
+
 ```
 
 ### @schema
