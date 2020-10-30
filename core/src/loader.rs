@@ -287,8 +287,8 @@ impl Loader {
                 ..Default::default()
             };
             parameters.push(self.parse_parameter(
-                &prop.value,
                 parameter,
+                &prop.value,
                 &enter_scope(scope, prop.key.as_str()),
             )?);
         }
@@ -336,31 +336,60 @@ impl Loader {
                     prop.position.clone(),
                 ));
             }
-            let content_type = self.parse_content_type_annotation(prop_annotations, &prop_scope)?;
-            let schema = self.parse_schema(&prop.value, false, scope)?;
-            let media_type = MediaType {
-                schema: Some(schema),
-                ..Default::default()
-            };
             let description = self
                 .parse_description_annnotation(prop_annotations, &prop_scope)?
                 .unwrap_or("-".into());
+
             let mut response = Response {
                 description,
                 ..Default::default()
             };
-            response
-                .content
-                .get_or_insert(Default::default())
-                .insert(content_type, media_type);
+
+            let with_header = prop_annotations.iter().find(|v| v.name == "withHeader").map(|_| true).unwrap_or(false);
+
+            if with_header {
+                if !prop.value.is_object() {
+                    return Err(Error::invalid_ast(
+                        "must be object",
+                        &prop_scope,
+                        prop.position.clone(),
+                    ));
+                }
+                let status_res = prop.value.as_object().unwrap();
+                let header_obj = status_res.properties.iter().find(|v| v.key == "header");
+                let header_scope = enter_scope(&prop_scope, "header");
+                if header_obj.is_none() {
+                    return Err(Error::invalid_ast(
+                        "miss",
+                        &header_scope,
+                        prop.position.clone(),
+                    ));
+                }
+                let body_obj = status_res.properties.iter().find(|v| v.key == "body");
+                let body_scope = enter_scope(&prop_scope, "body");
+                if body_obj.is_none() {
+                    return Err(Error::invalid_ast(
+                        "miss",
+                        &body_scope,
+                        prop.position.clone(),
+                    ));
+                }
+                let header_obj = header_obj.unwrap();
+                let body_obj = body_obj.unwrap();
+                self.parse_res_header(&mut response, &header_obj.value, &header_scope)?;
+                self.parse_res_body(&mut response, &body_obj.value, &body_scope)?;
+            } else {
+                self.parse_res_body(&mut response, &prop.value, &prop_scope)?;
+            }
+
             opration.responses.insert(prop.key.clone(), response);
         }
         Ok(())
     }
     fn parse_parameter(
         &mut self,
-        value: &Ast,
         mut parameter: Parameter,
+        value: &Ast,
         scope: &[&str],
     ) -> Result<ObjectOrReference<Parameter>> {
         let annotations = value.get_annotations();
@@ -378,6 +407,52 @@ impl Loader {
         }
         Ok(parameter_object)
     }
+
+    fn parse_res_header(
+        &mut self,
+        response: &mut Response,
+        value: &Ast,
+        scope: &[&str],
+    ) -> Result<()> {
+        if !value.is_object() {
+            return Err(Error::invalid_ast(
+                "must be object",
+                &scope,
+                value.get_position().clone(),
+            ));
+        }
+        let value = value.as_object().unwrap();
+        for prop in value.properties.iter() {
+            let annotations = prop.value.get_annotations();
+            let mut header  = Header::default();
+            header.description = self.parse_description_annnotation(annotations, scope)?;
+            header.required = Some(!self.parse_optional_annnotation(annotations, scope));
+            header.schema = Some(self.parse_schema(&prop.value, true, scope)?);
+            let header_object = ObjectOrReference::Object(header);
+            response.headers.get_or_insert(Default::default()).insert(prop.key.clone(), header_object);
+        }
+        Ok(())
+    }
+
+    fn parse_res_body(
+        &mut self,
+        response: &mut Response,
+        value: &Ast,
+        scope: &[&str],
+    ) -> Result<()> {
+        let content_type = self.parse_content_type_annotation(value.get_annotations(), &scope)?;
+        let schema = self.parse_schema(value, false, scope)?;
+        let media_type = MediaType {
+            schema: Some(schema),
+            ..Default::default()
+        };
+        response
+            .content
+            .get_or_insert(Default::default())
+            .insert(content_type, media_type);
+        Ok(())
+    }
+
     fn parse_schema(&mut self, value: &Ast, is_parameter: bool, scope: &[&str]) -> Result<Schema> {
         let annotations = value.get_annotations();
         if !is_parameter {
