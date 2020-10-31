@@ -123,7 +123,7 @@ impl Loader {
             self.parse_res(&mut operation, res, &enter_scope(&scope, "res"))?;
         } else {
             let default_response = Response {
-                description: "-".into(),
+                description: Default::default(),
                 ..Default::default()
             };
             operation.responses.insert("200".into(), default_response);
@@ -324,6 +324,7 @@ impl Loader {
             ..Default::default()
         };
         let mut request_body = RequestBody::default();
+        request_body.description = self.parse_description_annnotation(annotations, scope)?;
         request_body.content.insert(content_type, media_type);
         request_body.required = Some(true);
         operation.request_body = Some(ObjectOrReference::Object(request_body));
@@ -353,7 +354,7 @@ impl Loader {
             }
             let description = self
                 .parse_description_annnotation(prop_annotations, &prop_scope)?
-                .unwrap_or("-".into());
+                .unwrap_or(Default::default());
 
             let mut response = Response {
                 description,
@@ -495,8 +496,6 @@ impl Loader {
             .parse_schema_annotation(annotations, scope)?
             .unwrap_or_default();
 
-        self.parse_description_annnotation(annotations, scope)?
-            .map(|v| schema.description = Some(v));
         let mut set_type = |ty: &str| {
             if schema.schema_type.is_none() {
                 schema.schema_type = Some(ty.into());

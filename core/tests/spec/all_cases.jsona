@@ -32,16 +32,16 @@
         d: 3,
       },
       header: {
-        'X-App-Key': 'Bearer Axxx...',
+        'X-App-Key': 'Bearer Axxx...', @description("x header")
       },
       query: {
         kind: 'q', @optional
       },
-      body: {
+      body: { @description("default content-type application/json")
         bool: false,
         integer: 3, @optional
         float: 4.3,
-        array1: [ @description("a simple array")
+        array1: [
           '3',
         ],
         object1: { @save("object1")
@@ -52,7 +52,7 @@
       }
     },
     res: {
-      200: {
+      200: { @description("success response")
         bool: false,
         integer: 3,
         float: 4.3,

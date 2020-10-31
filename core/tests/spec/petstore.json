@@ -52,7 +52,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -67,7 +67,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Invalid ID supplied",
                   "example": ""
                 }
               }
@@ -79,7 +78,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Pet not found",
                   "example": ""
                 }
               }
@@ -91,7 +89,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Validation exception",
                   "example": ""
                 }
               }
@@ -125,7 +122,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -171,7 +168,7 @@
         ],
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -215,7 +212,7 @@
         ],
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -258,7 +255,7 @@
         ],
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -321,7 +318,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Invalid input",
                   "example": ""
                 }
               }
@@ -371,7 +367,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Invalid pet value",
                   "example": ""
                 }
               }
@@ -430,7 +425,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -460,7 +455,7 @@
         "x-swagger-router-controller": "OrderController",
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -507,7 +502,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -541,11 +536,11 @@
         ],
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/order"
+                  "$ref": "#/components/schemas/Order"
                 }
               }
             }
@@ -556,7 +551,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Invalid ID supplied",
                   "example": ""
                 }
               }
@@ -568,7 +562,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Order not found",
                   "example": ""
                 }
               }
@@ -602,7 +595,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Invalid ID supplied",
                   "example": ""
                 }
               }
@@ -614,7 +606,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Order not found",
                   "example": ""
                 }
               }
@@ -642,7 +633,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -675,7 +666,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -716,14 +707,13 @@
         ],
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "headers": {
               "X-Rate-Limit": {
                 "description": "calls per hour allowed by the user",
                 "schema": {
                   "type": "integer",
                   "format": "int64",
-                  "description": "calls per hour allowed by the user",
                   "example": 10
                 },
                 "required": true
@@ -733,7 +723,6 @@
                 "schema": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "date in UTC when toekn expires",
                   "example": "<datetime"
                 },
                 "required": true
@@ -760,7 +749,7 @@
         "operationId": "logoutUser",
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -793,7 +782,7 @@
         ],
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -833,7 +822,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -869,7 +858,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "Invalid username supplied",
                   "example": ""
                 }
               }
@@ -881,7 +869,6 @@
               "application/json": {
                 "schema": {
                   "type": "string",
-                  "description": "User not found",
                   "example": ""
                 }
               }

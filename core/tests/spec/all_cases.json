@@ -52,6 +52,7 @@
           {
             "name": "X-App-Key",
             "in": "header",
+            "description": "x header",
             "schema": {
               "type": "string",
               "example": "Bearer Axxx..."
@@ -60,6 +61,7 @@
           }
         ],
         "requestBody": {
+          "description": "default content-type application/json",
           "content": {
             "application/json": {
               "schema": {
@@ -79,7 +81,6 @@
                     "example": 4.3
                   },
                   "array1": {
-                    "description": "a simple array",
                     "items": {
                       "type": "string",
                       "example": "3"
@@ -108,7 +109,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "success response",
             "content": {
               "application/json": {
                 "schema": {
@@ -169,7 +170,7 @@
             }
           },
           "400": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -201,7 +202,7 @@
         "operationId": "endpoint2",
         "responses": {
           "200": {
-            "description": "-"
+            "description": ""
           }
         }
       }
@@ -223,7 +224,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "applicaton/xml": {
                 "schema": {
@@ -242,7 +243,7 @@
         "operationId": "endpoint4",
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "headers": {
               "X-RateLimit": {
                 "schema": {
@@ -374,7 +375,7 @@
         },
         "responses": {
           "200": {
-            "description": "-",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -394,7 +395,7 @@
         "x-swagger-router-controller": "OrderController",
         "responses": {
           "200": {
-            "description": "-"
+            "description": ""
           }
         }
       }
