@@ -29,7 +29,7 @@
     req: {
       params: {
         b: "a",
-        c: 3,
+        d: 3,
       },
       header: {
         'X-App-Key': 'Bearer Axxx...',
