@@ -1,10 +1,10 @@
 use crate::error::{Error, Result};
-use std::collections::HashSet;
 use jsona::ast::{self, Annotation, Ast};
 use jsona::Loader as JLoader;
 use jsona::Position;
 use jsona_openapi_spec::*;
 use serde_json::{Map, Value};
+use std::collections::HashSet;
 use std::fmt;
 
 pub fn parse(input: &str) -> Result<Spec> {
@@ -27,7 +27,10 @@ impl Loader {
             .find(|annotation| annotation.name == "openapi")
         {
             let spec = Self::load_openapi(&openapi.value, openapi.position)?;
-            let mut loader = Loader { spec, routes: Default::default() };
+            let mut loader = Loader {
+                spec,
+                routes: Default::default(),
+            };
             if let Ast::Object(ast::Object { properties, .. }) = &ast {
                 properties
                     .iter()
@@ -171,7 +174,7 @@ impl Loader {
                     return Err(err());
                 }
                 let method = MethodKind::from_str(splited_route[0]).ok_or(err())?;
-                let path =splited_route[1].trim();
+                let path = splited_route[1].trim();
                 let path_parts: Vec<&str> = path.split("/").collect();
                 let cononcial_route = format!("{} {}", method.to_string(), path);
                 if !self.routes.insert(cononcial_route) {
@@ -179,7 +182,7 @@ impl Loader {
                         "is conflict",
                         &scope,
                         route.position.clone(),
-                    ))
+                    ));
                 }
                 Ok((method, path_parts))
             }

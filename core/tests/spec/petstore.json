@@ -98,12 +98,14 @@
             }
           }
         },
-        "security": {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -133,12 +135,14 @@
             }
           }
         },
-        "security": {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
       }
     },
     "/pet/findByStatus": {
@@ -179,12 +183,14 @@
             }
           }
         },
-        "security": {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
       }
     },
     "/pet/findByTags": {
@@ -221,12 +227,14 @@
             }
           }
         },
-        "security": {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
       }
     },
     "/pet/{petId}": {
@@ -260,13 +268,15 @@
             }
           }
         },
-        "security": {
-          "api_key": [],
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
+        "security": [
+          {
+            "api_key": [],
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -318,12 +328,14 @@
             }
           }
         },
-        "security": {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -366,12 +378,14 @@
             }
           }
         },
-        "security": {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
       }
     },
     "/pet/{petId}/uploadImage": {
@@ -426,12 +440,14 @@
             }
           }
         },
-        "security": {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
       }
     },
     "/store/inventory": {
@@ -464,9 +480,11 @@
             }
           }
         },
-        "security": {
-          "api_key": []
-        }
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       }
     },
     "/store/order": {

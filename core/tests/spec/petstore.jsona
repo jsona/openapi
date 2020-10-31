@@ -83,7 +83,7 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
             }
         }
     })
-    addPet: { @endpoint({summary:"Add a new pet to store",tags:["pet"],security:{petstore_auth:["write:pets","read:pets"]}})
+    addPet: { @endpoint({summary:"Add a new pet to store",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
         route: "POST /pet",
         req: {
             body: { @save("Pet")
@@ -111,7 +111,7 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
             }
         }
     },
-    updatePet: { @endpoint({summary:"Update an existing pet",tags:["pet"],security:{petstore_auth:["write:pets","read:pets"]}})
+    updatePet: { @endpoint({summary:"Update an existing pet",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
         route: "PUT /pet",
         req: {
             body: { @use("Pet")
@@ -125,7 +125,7 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
             405: "", @description("Validation exception")
         }
     },
-    findPetsByStatus: { @endpoint({summary:"Finds Pets by status",tags:["pet"],security:{petstore_auth:["write:pets","read:pets"]}})
+    findPetsByStatus: { @endpoint({summary:"Finds Pets by status",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
         route: "GET /pet/findByStatus",
         req: {
             query: {
@@ -138,7 +138,7 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
             ]
         }
     },
-    findPetsByTags: { @endpoint({summary:"Finds Pets by tags",tags:["pet"],security:{petstore_auth:["write:pets","read:pets"]}})
+    findPetsByTags: { @endpoint({summary:"Finds Pets by tags",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
         route: "GET /pet/findByTags",
         req: {
             query: {
@@ -153,7 +153,7 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
             ]
         }
     },
-    getPetById: { @endpoint({summary:"Find pet by ID",tags:["pet"],security:{api_key:[],petstore_auth:["write:pets","read:pets"]}})
+    getPetById: { @endpoint({summary:"Find pet by ID",tags:["pet"],security:[{api_key:[],petstore_auth:["write:pets","read:pets"]}]})
         route: "GET /pet/{}",
         req: {
             params: {
@@ -165,7 +165,7 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
             }
         }
     },
-    updatePetWithForm: { @endpoint({summary:"Updates a pet in the store with form data",tags:["pet"],security:{petstore_auth:["write:pets","read:pets"]}})
+    updatePetWithForm: { @endpoint({summary:"Updates a pet in the store with form data",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
         route: "POST /pet/{}",
         req: {
             params: {
@@ -180,7 +180,7 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
             405: "", @description("Invalid input")
         }
     },
-    deletePet: { @endpoint({summary:"Deletes a pet",tags:["pet"],security:{petstore_auth:["write:pets","read:pets"]}})
+    deletePet: { @endpoint({summary:"Deletes a pet",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
         route: "DELETE /pet/{}",
         req: {
             params: {
@@ -194,7 +194,7 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
             400: "", @description("Invalid pet value")
         }
     },
-    uploadPetImage: { @endpoint({summary:"Uploads an pet image",tags:["pet"],security:{petstore_auth:["write:pets","read:pets"]}})
+    uploadPetImage: { @endpoint({summary:"Uploads an pet image",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
         route: "POST /pet/{}/uploadImage",
         req: {
             params: {
@@ -215,7 +215,8 @@ Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/reso
     getInventory: { 
         @endpoint({
             summary:"Returns pet inventories by status",
-            tags:["store"],security:{api_key:[]},
+            tags:["store"],
+            security:[{api_key:[]}],
             "x-swagger-router-controller":"OrderController"
         })
         route: "POST /store/inventory",
