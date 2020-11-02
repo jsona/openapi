@@ -81,6 +81,7 @@
                     "example": 4.3
                   },
                   "array1": {
+                    "description": "a simple array",
                     "items": {
                       "type": "string",
                       "example": "3"

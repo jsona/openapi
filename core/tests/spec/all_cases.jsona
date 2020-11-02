@@ -41,7 +41,7 @@
         bool: false,
         integer: 3, @optional
         float: 4.3,
-        array1: [
+        array1: [ @description("a simple array")
           '3',
         ],
         object1: { @save("object1")

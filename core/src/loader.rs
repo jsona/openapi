@@ -318,7 +318,7 @@ impl Loader {
     ) -> Result<()> {
         let annotations = body.get_annotations();
         let content_type = self.parse_content_type_annotation(annotations, scope)?;
-        let schema = self.parse_schema(body, false, scope)?;
+        let schema = self.parse_schema(body, SchemaLocation::ReqBody, scope)?;
         let media_type = MediaType {
             schema: Some(schema),
             ..Default::default()
@@ -420,7 +420,7 @@ impl Loader {
         }
         parameter.description = self.parse_description_annnotation(annotations, scope)?;
         parameter.required = Some(!self.parse_optional_annnotation(annotations, scope));
-        parameter.schema = Some(self.parse_schema(value, true, scope)?);
+        parameter.schema = Some(self.parse_schema(value, SchemaLocation::Parameter, scope)?);
         let parameter_object = ObjectOrReference::Object(parameter);
         if let Some(name) = self.parse_save_annotation(annotations, scope)? {
             return self.save_parameters(name, parameter_object);
@@ -447,7 +447,8 @@ impl Loader {
             let mut header = Header::default();
             header.description = self.parse_description_annnotation(annotations, scope)?;
             header.required = Some(!self.parse_optional_annnotation(annotations, scope));
-            header.schema = Some(self.parse_schema(&prop.value, true, scope)?);
+            header.schema =
+                Some(self.parse_schema(&prop.value, SchemaLocation::ResHeader, scope)?);
             let header_object = ObjectOrReference::Object(header);
             response
                 .headers
@@ -464,7 +465,7 @@ impl Loader {
         scope: &[&str],
     ) -> Result<()> {
         let content_type = self.parse_content_type_annotation(value.get_annotations(), &scope)?;
-        let schema = self.parse_schema(value, false, scope)?;
+        let schema = self.parse_schema(value, SchemaLocation::ResBody, scope)?;
         let media_type = MediaType {
             schema: Some(schema),
             ..Default::default()
@@ -476,9 +477,14 @@ impl Loader {
         Ok(())
     }
 
-    fn parse_schema(&mut self, value: &Ast, is_parameter: bool, scope: &[&str]) -> Result<Schema> {
+    fn parse_schema(
+        &mut self,
+        value: &Ast,
+        location: SchemaLocation,
+        scope: &[&str],
+    ) -> Result<Schema> {
         let annotations = value.get_annotations();
-        if !is_parameter {
+        if location != SchemaLocation::Parameter {
             if let Some(ObjectOrReference::Ref { ref_path }) = self
                 .parse_use_annotation::<ObjectOrReference<Schema>>(
                     annotations,
@@ -495,6 +501,10 @@ impl Loader {
         let mut schema = self
             .parse_schema_annotation(annotations, scope)?
             .unwrap_or_default();
+
+        if location == SchemaLocation::Schema {
+            schema.description = self.parse_description_annnotation(annotations, scope)?;
+        }
 
         let mut set_type = |ty: &str| {
             if schema.schema_type.is_none() {
@@ -536,8 +546,11 @@ impl Loader {
                         set_type("array");
                     } else {
                         if schema.items.is_none() {
-                            let items_schema =
-                                self.parse_schema(&elements[0], false, &enter_scope(scope, "0"))?;
+                            let items_schema = self.parse_schema(
+                                &elements[0],
+                                SchemaLocation::Schema,
+                                &enter_scope(scope, "0"),
+                            )?;
                             schema.items = Some(Box::new(items_schema));
                         }
                     }
@@ -546,7 +559,7 @@ impl Loader {
                     for (i, elem) in elements.iter().enumerate() {
                         elem_schemas.push(self.parse_schema(
                             elem,
-                            is_parameter,
+                            SchemaLocation::Schema,
                             &enter_scope(scope, format!("{}", i).as_str()),
                         )?);
                     }
@@ -562,7 +575,8 @@ impl Loader {
                 set_type("object");
                 for prop in properties.iter() {
                     let prop_scope = enter_scope(scope, prop.key.as_str());
-                    let prop_schema = self.parse_schema(&prop.value, false, &prop_scope)?;
+                    let prop_schema =
+                        self.parse_schema(&prop.value, SchemaLocation::Schema, &prop_scope)?;
                     schema
                         .properties
                         .get_or_insert(Default::default())
@@ -829,4 +843,13 @@ impl ComponentKind {
             ComponentKind::Parameter => format!("#/components/parameters/{}", name),
         }
     }
+}
+
+#[derive(Debug, PartialEq)]
+enum SchemaLocation {
+    Parameter,
+    ReqBody,
+    ResBody,
+    ResHeader,
+    Schema,
 }
