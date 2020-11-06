@@ -513,13 +513,7 @@ impl Loader {
         };
 
         match value {
-            Ast::Null(_) => {
-                return Err(Error::invalid_ast(
-                    "can not be null",
-                    scope,
-                    value.get_position().clone(),
-                ));
-            }
+            Ast::Null(_) => {}
             Ast::Boolean(_) => {
                 set_type("boolean");
                 schema.example = Some(value.into());

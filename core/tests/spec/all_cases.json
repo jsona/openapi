@@ -67,6 +67,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "null": {},
                   "bool": {
                     "type": "boolean",
                     "example": false
@@ -97,6 +98,7 @@
                   }
                 },
                 "required": [
+                  "null",
                   "bool",
                   "float",
                   "array1",

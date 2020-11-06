@@ -38,6 +38,7 @@
         kind: 'q', @optional
       },
       body: { @description("default content-type application/json")
+        null: null,
         bool: false,
         integer: 3, @optional
         float: 4.3,
