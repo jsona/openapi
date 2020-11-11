@@ -82,6 +82,7 @@
                     "example": 4.3
                   },
                   "array1": {
+                    "type": "array",
                     "description": "a simple array",
                     "items": {
                       "type": "string",
@@ -90,6 +91,23 @@
                   },
                   "object1": {
                     "$ref": "#/components/schemas/object1"
+                  },
+                  "objectarray": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "a": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 3
+                        }
+                      },
+                      "required": [
+                        "a"
+                      ]
+                    },
+                    "maxItems": 3
                   },
                   "time": {
                     "type": "string",
@@ -103,6 +121,7 @@
                   "float",
                   "array1",
                   "object1",
+                  "objectarray",
                   "time"
                 ]
               }
@@ -132,6 +151,7 @@
                       "example": 4.3
                     },
                     "array1": {
+                      "type": "array",
                       "items": {
                         "type": "string",
                         "example": "3"

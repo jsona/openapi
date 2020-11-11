@@ -49,6 +49,11 @@
           a: 3,
           b: 4,
         },
+        objectarray: [ @schema({maxItems: 3})
+          {
+            a: 3
+          }
+        ],
         time: '2018-11-13T20:20:39Z', @schema({format: "date-time"})
       }
     },

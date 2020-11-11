@@ -536,17 +536,14 @@ impl Loader {
             Ast::Array(ast::Array { elements, .. }) => {
                 let combine = self.parse_schema_combine_annotation(annotations, scope)?;
                 if combine.is_none() {
-                    if elements.len() == 0 {
-                        set_type("array");
-                    } else {
-                        if schema.items.is_none() {
-                            let items_schema = self.parse_schema(
-                                &elements[0],
-                                SchemaLocation::Schema,
-                                &enter_scope(scope, "0"),
-                            )?;
-                            schema.items = Some(Box::new(items_schema));
-                        }
+                    set_type("array");
+                    if elements.len() > 0 && schema.items.is_none() {
+                        let items_schema = self.parse_schema(
+                            &elements[0],
+                            SchemaLocation::Schema,
+                            &enter_scope(scope, "0"),
+                        )?;
+                        schema.items = Some(Box::new(items_schema));
                     }
                 } else {
                     let mut elem_schemas: Vec<Schema> = vec![];

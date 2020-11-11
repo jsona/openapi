@@ -172,6 +172,7 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/Pet"
                   }
@@ -202,6 +203,7 @@
             "name": "status",
             "in": "query",
             "schema": {
+              "type": "array",
               "items": {
                 "type": "string",
                 "example": "Dog"
@@ -216,6 +218,7 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/Pet"
                   }
@@ -656,6 +659,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/User"
                 }
@@ -899,6 +903,7 @@
         ]
       },
       "Tag": {
+        "type": "array",
         "items": {
           "type": "object",
           "properties": {
@@ -934,6 +939,7 @@
             "$ref": "#/components/schemas/Category"
           },
           "photoUrls": {
+            "type": "array",
             "items": {
               "type": "string",
               "example": "<url:img>"
