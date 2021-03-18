@@ -439,7 +439,7 @@ pub struct Schema {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(rename = "enum")]
-    pub enum_values: Option<Vec<String>>,
+    pub enum_values: Option<Vec<serde_json::Value>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub nullable: Option<bool>,
@@ -512,8 +512,6 @@ pub struct Schema {
     pub max_properties: Option<u32>,
     #[serde(rename = "minProperties", skip_serializing_if = "Option::is_none")]
     pub min_properties: Option<u32>,
-    #[serde(rename = "enum", skip_serializing_if = "Option::is_none")]
-    pub enum_: Option<Vec<serde_json::Value>>,
 }
 
 /// Describes a single response from an API Operation, including design-time, static `links`
