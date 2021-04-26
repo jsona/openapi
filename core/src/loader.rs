@@ -5,9 +5,6 @@ use serde_json::{Map, Value};
 use std::collections::HashSet;
 use std::fmt;
 
-pub fn parse(input: &str) -> Result<Spec> {
-    Loader::load_from_str(input)
-}
 pub struct Loader {
     spec: Spec,
     routes: HashSet<String>,
@@ -16,10 +13,10 @@ pub struct Loader {
 impl Loader {
     pub fn load_from_str(input: &str) -> Result<Spec> {
         let value = jsona::from_str(input)?;
-        Self::load_from_ast(value)
+        Self::load_from_jsona(value)
     }
-    pub fn load_from_ast(ast: Jsona) -> Result<Spec> {
-        if let Some(openapi) = ast
+    pub fn load_from_jsona(value: Jsona) -> Result<Spec> {
+        if let Some(openapi) = value
             .get_annotations()
             .iter()
             .find(|annotation| annotation.name == "openapi")
@@ -29,7 +26,7 @@ impl Loader {
                 spec,
                 routes: Default::default(),
             };
-            if let Jsona::Object(syntax::Object { properties, .. }) = &ast {
+            if let Jsona::Object(syntax::Object { properties, .. }) = &value {
                 properties
                     .iter()
                     .map(|prop| loader.parse_endpoint(prop))

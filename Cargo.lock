@@ -64,7 +64,7 @@ dependencies = [
 
 [[package]]
 name = "jsona-openapi"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "jsona",
  "jsona_openapi_spec",
@@ -75,7 +75,7 @@ dependencies = [
 
 [[package]]
 name = "jsona-openapi-cli"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "anyhow",
  "jsona-openapi",
