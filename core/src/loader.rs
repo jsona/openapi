@@ -1,7 +1,5 @@
 use crate::error::{Error, Result};
-use jsona::ast::{self, Annotation, Ast};
-use jsona::Loader as JLoader;
-use jsona::Position;
+use jsona::{syntax, Jsona, syntax::{Position, Annotation}};
 use jsona_openapi_spec::*;
 use serde_json::{Map, Value};
 use std::collections::HashSet;
@@ -17,10 +15,10 @@ pub struct Loader {
 
 impl Loader {
     pub fn load_from_str(input: &str) -> Result<Spec> {
-        let ast = JLoader::load_from_str(input)?;
-        Self::load_from_ast(ast)
+        let value = jsona::from_str(input)?;
+        Self::load_from_ast(value)
     }
-    pub fn load_from_ast(ast: Ast) -> Result<Spec> {
+    pub fn load_from_ast(ast: Jsona) -> Result<Spec> {
         if let Some(openapi) = ast
             .get_annotations()
             .iter()
@@ -31,7 +29,7 @@ impl Loader {
                 spec,
                 routes: Default::default(),
             };
-            if let Ast::Object(ast::Object { properties, .. }) = &ast {
+            if let Jsona::Object(syntax::Object { properties, .. }) = &ast {
                 properties
                     .iter()
                     .map(|prop| loader.parse_endpoint(prop))
@@ -95,7 +93,7 @@ impl Loader {
         serde_json::from_value(value)
             .map_err(|_| Error::invalid_annotation("is invalid", "openapi", &[], position))
     }
-    fn parse_endpoint(&mut self, prop: &ast::Property) -> Result<()> {
+    fn parse_endpoint(&mut self, prop: &syntax::Property) -> Result<()> {
         let operation_id = prop.key.as_str();
         let scope = vec![operation_id];
         if !prop.value.is_object() {
@@ -135,7 +133,7 @@ impl Loader {
         method.add_operation(path_item, operation);
         Ok(())
     }
-    fn parse_endpoint_annotation(&mut self, value: &Ast, scope: &[&str]) -> Result<Operation> {
+    fn parse_endpoint_annotation(&mut self, value: &Jsona, scope: &[&str]) -> Result<Operation> {
         let endpoint_annotations = value.get_annotations();
         if let Some(Annotation {
             position, value, ..
@@ -163,11 +161,11 @@ impl Loader {
     }
     fn parse_route<'a>(
         &mut self,
-        value: &'a Ast,
+        value: &'a Jsona,
         scope: &[&str],
     ) -> Result<(MethodKind, Vec<&'a str>)> {
         match value.retrive(&["route"]) {
-            Some(Ast::String(route)) => {
+            Some(Jsona::String(route)) => {
                 let splited_route: Vec<&str> = route.value.split(" ").collect();
                 let err = || Error::invalid_ast("is invalid", &scope, route.position.clone());
                 if splited_route.len() != 2 {
@@ -201,7 +199,7 @@ impl Loader {
     fn parse_req(
         &mut self,
         operation: &mut Operation,
-        req: &Ast,
+        req: &Jsona,
         path_parts: &[&str],
         scope: &[&str],
     ) -> Result<String> {
@@ -245,7 +243,7 @@ impl Loader {
     fn parse_req_params(
         &mut self,
         operation: &mut Operation,
-        params: &Ast,
+        params: &Jsona,
         path_parts: &[&str],
         scope: &[&str],
     ) -> Result<String> {
@@ -283,7 +281,7 @@ impl Loader {
         &mut self,
         operation: &mut Operation,
         location: &str,
-        node: &Ast,
+        node: &Jsona,
         scope: &[&str],
     ) -> Result<()> {
         if !node.is_object() {
@@ -313,7 +311,7 @@ impl Loader {
     fn parse_req_body(
         &mut self,
         operation: &mut Operation,
-        body: &Ast,
+        body: &Jsona,
         scope: &[&str],
     ) -> Result<()> {
         let annotations = body.get_annotations();
@@ -330,7 +328,7 @@ impl Loader {
         operation.request_body = Some(ObjectOrReference::Object(request_body));
         Ok(())
     }
-    fn parse_res(&mut self, opration: &mut Operation, res: &Ast, scope: &[&str]) -> Result<()> {
+    fn parse_res(&mut self, opration: &mut Operation, res: &Jsona, scope: &[&str]) -> Result<()> {
         if !res.is_object() {
             return Err(Error::invalid_ast(
                 "must be object",
@@ -409,7 +407,7 @@ impl Loader {
     fn parse_parameter(
         &mut self,
         mut parameter: Parameter,
-        value: &Ast,
+        value: &Jsona,
         scope: &[&str],
     ) -> Result<ObjectOrReference<Parameter>> {
         let annotations = value.get_annotations();
@@ -431,7 +429,7 @@ impl Loader {
     fn parse_res_header(
         &mut self,
         response: &mut Response,
-        value: &Ast,
+        value: &Jsona,
         scope: &[&str],
     ) -> Result<()> {
         if !value.is_object() {
@@ -461,7 +459,7 @@ impl Loader {
     fn parse_res_body(
         &mut self,
         response: &mut Response,
-        value: &Ast,
+        value: &Jsona,
         scope: &[&str],
     ) -> Result<()> {
         let content_type = self.parse_content_type_annotation(value.get_annotations(), &scope)?;
@@ -479,7 +477,7 @@ impl Loader {
 
     fn parse_schema(
         &mut self,
-        value: &Ast,
+        value: &Jsona,
         location: SchemaLocation,
         scope: &[&str],
     ) -> Result<Schema> {
@@ -513,27 +511,27 @@ impl Loader {
         };
 
         match value {
-            Ast::Null(_) => {}
-            Ast::Boolean(_) => {
+            Jsona::Null(_) => {}
+            Jsona::Boolean(_) => {
                 set_type("boolean");
                 schema.example = Some(value.into());
             }
-            Ast::Integer(_) => {
+            Jsona::Integer(_) => {
                 set_type("integer");
                 schema.example = Some(value.into());
                 if schema.format.is_none() {
                     schema.format = Some("int64".into());
                 }
             }
-            Ast::Float(_) => {
+            Jsona::Float(_) => {
                 set_type("number");
                 schema.example = Some(value.into());
             }
-            Ast::String(_) => {
+            Jsona::String(_) => {
                 set_type("string");
                 schema.example = Some(value.into());
             }
-            Ast::Array(ast::Array { elements, .. }) => {
+            Jsona::Array(syntax::Array { elements, .. }) => {
                 let combine = self.parse_schema_combine_annotation(annotations, scope)?;
                 if combine.is_none() {
                     set_type("array");
@@ -562,7 +560,7 @@ impl Loader {
                     }
                 }
             }
-            Ast::Object(ast::Object { properties, .. }) => {
+            Jsona::Object(syntax::Object { properties, .. }) => {
                 set_type("object");
                 for prop in properties.iter() {
                     let prop_scope = enter_scope(scope, prop.key.as_str());

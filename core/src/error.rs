@@ -1,5 +1,5 @@
 use jsona::Error as JsonaError;
-use jsona::Position;
+use jsona::syntax::Position;
 use serde::{Deserialize, Serialize};
 use thiserror::Error as TError;
 
