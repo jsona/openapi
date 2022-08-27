@@ -22,7 +22,8 @@ fn main() {
 fn run(input_file: &str, output_file: Option<&String>) -> Result<()> {
     let input = fs::read_to_string(input_file)
         .map_err(|e| anyhow::anyhow!("fail to read input file, {}", e))?;
-    let spec = from_str(input.as_str()).map_err(|e| anyhow::anyhow!("fail to parse spec, {}", e))?;
+    let spec =
+        from_str(input.as_str()).map_err(|e| anyhow::anyhow!("fail to parse spec, {}", e))?;
     let is_json = match output_file {
         Some(value) => value.ends_with(".json"),
         None => false,

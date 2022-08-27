@@ -1,6 +1,10 @@
 use crate::error::{Error, Result};
-use jsona::{syntax, Jsona, syntax::{Position, Annotation}};
-use jsona_openapi_spec::*;
+use crate::spec::*;
+use jsona::{
+    syntax,
+    syntax::{Annotation, Position},
+    Jsona,
+};
 use serde_json::{Map, Value};
 use std::collections::HashSet;
 use std::fmt;

@@ -1,9 +1,9 @@
 [package]
-name = "jsona-openapi"
+name = "jsona-openapi-cli"
 version = "0.2.1"
 authors = ["sigoden <sigoden@gmail.com>"]
 edition = "2018"
-description = "Parse openapi in jsona format"
+description = "convert jsona to openapi yaml/json"
 documentation = "https://github.com/sigoden/jsona-openapi/tree/master/core"
 repository = "https://github.com/sigoden/jsona-openapi"
 keywords = ["jsona", "openapi", "swagger"]
@@ -13,8 +13,11 @@ readme = "_README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-jsona = { version = "0.2.0" }
-serde_json = "1"
-thiserror = "1"
-jsona_openapi_spec = { path = "../spec", version = "0.1.7" }
-serde = { version = "1.0", features = ["derive"] }
+jsona-openapi = { path = "../jsona-openapi", version = "0.2.1" }
+serde_json = "1.0"
+serde_yaml = "0.8"
+anyhow = "1.0"
+
+[[bin]]
+name = "jsona-openapi"
+path = "src/main.rs"
