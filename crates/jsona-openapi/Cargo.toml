@@ -2,19 +2,27 @@
 name = "jsona-openapi"
 version = "0.2.1"
 authors = ["sigoden <sigoden@gmail.com>"]
-edition = "2018"
-description = "Parse openapi in jsona format"
+edition = "2021"
+description = "A openapi dsl in jsona"
 documentation = "https://github.com/sigoden/jsona-openapi/tree/master/core"
 repository = "https://github.com/sigoden/jsona-openapi"
 keywords = ["jsona", "openapi", "swagger"]
 license = "MIT"
 readme = "_README.md"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-jsona = { version = "0.2.0" }
+jsona = { git = "https://github.com/jsona/jsona", version = "0.5" }
+jsona-schema = { git = "https://github.com/jsona/jsona", version = "0.2" }
 serde_json = "1"
 thiserror = "1"
-jsona_openapi_spec = { path = "../spec", version = "0.1.7" }
 serde = { version = "1.0", features = ["derive"] }
+indexmap = { version = "~1.6", features = ["serde"] }
+url = { version = "2.2", features = ["serde"] }
+
+[dev-dependencies]
+insta = "1.15"
+
+[[test]]
+name = "integration"
+path = "tests/tests.rs"

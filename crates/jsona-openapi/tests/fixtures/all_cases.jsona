@@ -3,7 +3,7 @@
     openapi: "3.0.0",
     info: {
       title: "Sample Api",
-      description: "Optional",
+      describe: "Optional",
       version: "0.1.9",
     },
     servers: [
@@ -31,21 +31,21 @@
         b: "a",
         d: 3,
       },
-      header: {
-        'X-App-Key': 'Bearer Axxx...', @description("x header")
+      headers: {
+        'X-App-Key': 'Bearer Axxx...', @describe("x header")
       },
       query: {
         kind: 'q', @optional
       },
-      body: { @description("default content-type application/json")
+      body: { @describe("default content-type application/json")
         null: null,
         bool: false,
         integer: 3, @optional
         float: 4.3,
-        array1: [ @description("a simple array")
+        array1: [ @describe("a simple array")
           '3',
         ],
-        object1: { @save("object1")
+        object1: { @def("object1")
           a: 3,
           b: 4,
         },
@@ -58,7 +58,7 @@
       }
     },
     res: {
-      200: { @description("success response")
+      200: { @describe("success response")
         bool: false,
         integer: 3,
         float: 4.3,
@@ -69,7 +69,7 @@
           a: 3,
           b: 4,
         },
-        object2: { @use("object1")
+        object2: { @ref("object1")
         }
       },
       400: {
@@ -94,7 +94,7 @@
     route: "GET /endpoint4",
     res: {
       200: { @withHeader
-        header: {
+        headers: {
           'X-RateLimit': 10,
         },
         body: {

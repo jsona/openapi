@@ -1,3 +1,7 @@
+---
+source: crates/jsona-openapi/tests/tests.rs
+expression: output
+---
 {
   "openapi": "3.0.2",
   "info": {
@@ -66,8 +70,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -77,8 +80,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -88,8 +90,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -156,7 +157,6 @@
             "schema": {
               "type": "string",
               "default": "available",
-              "example": "available",
               "enum": [
                 "available",
                 "pending",
@@ -205,8 +205,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string",
-                "example": "Dog"
+                "type": "string"
               }
             },
             "required": false
@@ -249,9 +248,7 @@
             "name": "petId",
             "in": "path",
             "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 3
+              "type": "integer"
             },
             "required": true
           }
@@ -289,9 +286,7 @@
             "name": "petId",
             "in": "path",
             "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 3
+              "type": "integer"
             },
             "required": true
           },
@@ -299,8 +294,7 @@
             "name": "name",
             "in": "query",
             "schema": {
-              "type": "string",
-              "example": "Jam"
+              "type": "string"
             },
             "required": true
           },
@@ -308,8 +302,7 @@
             "name": "status",
             "in": "query",
             "schema": {
-              "type": "string",
-              "example": "sold"
+              "type": "string"
             },
             "required": true
           }
@@ -320,8 +313,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -347,18 +339,15 @@
             "name": "petId",
             "in": "path",
             "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 3
+              "type": "integer"
             },
             "required": true
           },
           {
             "name": "api_key",
-            "in": "header",
+            "in": "headers",
             "schema": {
-              "type": "string",
-              "example": ""
+              "type": "string"
             },
             "required": true
           }
@@ -369,8 +358,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -398,9 +386,7 @@
             "name": "petId",
             "in": "path",
             "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 3
+              "type": "integer"
             },
             "required": true
           },
@@ -408,8 +394,7 @@
             "name": "additionalMetadata",
             "in": "query",
             "schema": {
-              "type": "string",
-              "example": ""
+              "type": "string"
             },
             "required": true
           }
@@ -419,8 +404,7 @@
             "application/octet-stream": {
               "schema": {
                 "type": "string",
-                "format": "binary",
-                "example": ""
+                "format": "binary"
               }
             }
           },
@@ -465,9 +449,7 @@
                   "type": "object",
                   "properties": {
                     "additionalProperties": {
-                      "type": "integer",
-                      "format": "int64",
-                      "example": 0
+                      "type": "integer"
                     }
                   },
                   "required": [
@@ -530,9 +512,7 @@
             "name": "orderId",
             "in": "path",
             "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 13
+              "type": "integer"
             },
             "required": true
           }
@@ -553,8 +533,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -564,8 +543,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -584,9 +562,7 @@
             "name": "orderId",
             "in": "path",
             "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 13
+              "type": "integer"
             },
             "required": true
           }
@@ -597,8 +573,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -608,8 +583,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -694,8 +668,7 @@
             "name": "username",
             "in": "query",
             "schema": {
-              "type": "string",
-              "example": "Jonh"
+              "type": "string"
             },
             "required": true
           },
@@ -703,8 +676,7 @@
             "name": "password",
             "in": "query",
             "schema": {
-              "type": "string",
-              "example": "12345"
+              "type": "string"
             },
             "required": true
           }
@@ -716,9 +688,7 @@
               "X-Rate-Limit": {
                 "description": "calls per hour allowed by the user",
                 "schema": {
-                  "type": "integer",
-                  "format": "int64",
-                  "example": 10
+                  "type": "integer"
                 },
                 "required": true
               },
@@ -726,8 +696,7 @@
                 "description": "date in UTC when toekn expires",
                 "schema": {
                   "type": "string",
-                  "format": "date-time",
-                  "example": "<datetime"
+                  "format": "date-time"
                 },
                 "required": true
               }
@@ -735,8 +704,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -757,8 +725,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -778,8 +745,7 @@
             "name": "username",
             "in": "path",
             "schema": {
-              "type": "string",
-              "example": "Jonh"
+              "type": "string"
             },
             "required": true
           }
@@ -790,7 +756,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -808,8 +774,7 @@
             "name": "username",
             "in": "path",
             "schema": {
-              "type": "string",
-              "example": "Jonh"
+              "type": "string"
             },
             "required": true
           }
@@ -818,7 +783,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "$ref": "#/components/schemas/User"
               }
             }
           },
@@ -830,8 +795,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -849,8 +813,7 @@
             "name": "username",
             "in": "path",
             "schema": {
-              "type": "string",
-              "example": "Jonh"
+              "type": "string"
             },
             "required": true
           }
@@ -861,8 +824,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -872,8 +834,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -884,56 +845,14 @@
   },
   "components": {
     "schemas": {
-      "Category": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 1
-          },
-          "name": {
-            "type": "string",
-            "example": "Dogs"
-          }
-        },
-        "required": [
-          "id",
-          "name"
-        ]
-      },
-      "Tag": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "format": "int64",
-              "example": 1
-            },
-            "name": {
-              "type": "string",
-              "example": "dog"
-            }
-          },
-          "required": [
-            "id",
-            "name"
-          ]
-        }
-      },
       "Pet": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 10
+            "type": "integer"
           },
           "name": {
-            "type": "string",
-            "example": "doggie"
+            "type": "string"
           },
           "category": {
             "$ref": "#/components/schemas/Category"
@@ -941,8 +860,7 @@
           "photoUrls": {
             "type": "array",
             "items": {
-              "type": "string",
-              "example": "<url:img>"
+              "type": "string"
             }
           },
           "tags": {
@@ -950,7 +868,6 @@
           },
           "status": {
             "type": "string",
-            "example": "available",
             "enum": [
               "available",
               "pending",
@@ -967,17 +884,47 @@
           "status"
         ]
       },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "Tag": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name"
+          ]
+        }
+      },
       "ApiResponse": {
         "type": "object",
         "properties": {
           "code": {
-            "type": "integer",
-            "format": "int64",
-            "example": 0
+            "type": "integer"
           },
           "message": {
-            "type": "string",
-            "example": "OK"
+            "type": "string"
           }
         },
         "required": [
@@ -989,31 +936,22 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 10
+            "type": "integer"
           },
           "petId": {
-            "type": "integer",
-            "format": "int64",
-            "example": 198772
+            "type": "integer"
           },
           "quantity": {
-            "type": "integer",
-            "format": "int64",
-            "example": 7
+            "type": "integer"
           },
           "shipDate": {
-            "type": "string",
-            "example": "2020-10-30T08:24:17.882Z"
+            "type": "string"
           },
           "status": {
-            "type": "string",
-            "example": "approved"
+            "type": "string"
           },
           "complete": {
-            "type": "boolean",
-            "example": true
+            "type": "boolean"
           }
         },
         "required": [
@@ -1029,38 +967,28 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 10
+            "type": "integer"
           },
           "username": {
-            "type": "string",
-            "example": "theUser"
+            "type": "string"
           },
           "firstName": {
-            "type": "string",
-            "example": "John"
+            "type": "string"
           },
           "lastName": {
-            "type": "string",
-            "example": "James"
+            "type": "string"
           },
           "email": {
-            "type": "string",
-            "example": "john@email.com"
+            "type": "string"
           },
           "password": {
-            "type": "string",
-            "example": "12345"
+            "type": "string"
           },
           "phone": {
-            "type": "string",
-            "example": "12345"
+            "type": "string"
           },
           "userStatus": {
-            "type": "integer",
-            "format": "int64",
-            "example": 1
+            "type": "integer"
           }
         },
         "required": [
@@ -1076,22 +1004,22 @@
       }
     },
     "securitySchemes": {
-      "api_key": {
-        "type": "apiKey",
-        "name": "api_key",
-        "in": "header"
-      },
       "petstore_auth": {
         "type": "oauth2",
         "flows": {
           "implicit": {
             "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
             "scopes": {
-              "read:pets": "read your pets",
-              "write:pets": "modify pets in your account"
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
             }
           }
         }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
       }
     }
   }

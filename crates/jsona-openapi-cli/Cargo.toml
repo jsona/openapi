@@ -2,7 +2,7 @@
 name = "jsona-openapi-cli"
 version = "0.2.1"
 authors = ["sigoden <sigoden@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "convert jsona to openapi yaml/json"
 documentation = "https://github.com/sigoden/jsona-openapi/tree/master/core"
 repository = "https://github.com/sigoden/jsona-openapi"
@@ -13,7 +13,7 @@ readme = "_README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-jsona-openapi = { path = "../core", version = "0.2.1" }
+jsona-openapi = { path = "../jsona-openapi", version = "0.2.1" }
 serde_json = "1.0"
 serde_yaml = "0.8"
 anyhow = "1.0"

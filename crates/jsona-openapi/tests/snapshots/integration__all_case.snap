@@ -1,8 +1,11 @@
+---
+source: crates/jsona-openapi/tests/tests.rs
+expression: output
+---
 {
   "openapi": "3.0.0",
   "info": {
     "title": "Sample Api",
-    "description": "Optional",
     "version": "0.1.9"
   },
   "servers": [
@@ -25,8 +28,7 @@
             "name": "b",
             "in": "path",
             "schema": {
-              "type": "string",
-              "example": "a"
+              "type": "string"
             },
             "required": true
           },
@@ -34,9 +36,16 @@
             "name": "d",
             "in": "path",
             "schema": {
-              "type": "integer",
-              "format": "int64",
-              "example": 3
+              "type": "integer"
+            },
+            "required": true
+          },
+          {
+            "name": "X-App-Key",
+            "in": "headers",
+            "description": "x header",
+            "schema": {
+              "type": "string"
             },
             "required": true
           },
@@ -44,20 +53,9 @@
             "name": "kind",
             "in": "query",
             "schema": {
-              "type": "string",
-              "example": "q"
+              "type": "string"
             },
             "required": false
-          },
-          {
-            "name": "X-App-Key",
-            "in": "header",
-            "description": "x header",
-            "schema": {
-              "type": "string",
-              "example": "Bearer Axxx..."
-            },
-            "required": true
           }
         ],
         "requestBody": {
@@ -67,26 +65,23 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "null": {},
+                  "null": {
+                    "type": "null"
+                  },
                   "bool": {
-                    "type": "boolean",
-                    "example": false
+                    "type": "boolean"
                   },
                   "integer": {
-                    "type": "integer",
-                    "format": "int64",
-                    "example": 3
+                    "type": "integer"
                   },
                   "float": {
-                    "type": "number",
-                    "example": 4.3
+                    "type": "number"
                   },
                   "array1": {
-                    "type": "array",
                     "description": "a simple array",
+                    "type": "array",
                     "items": {
-                      "type": "string",
-                      "example": "3"
+                      "type": "string"
                     }
                   },
                   "object1": {
@@ -98,9 +93,7 @@
                       "type": "object",
                       "properties": {
                         "a": {
-                          "type": "integer",
-                          "format": "int64",
-                          "example": 3
+                          "type": "integer"
                         }
                       },
                       "required": [
@@ -111,8 +104,7 @@
                   },
                   "time": {
                     "type": "string",
-                    "format": "date-time",
-                    "example": "2018-11-13T20:20:39Z"
+                    "format": "date-time"
                   }
                 },
                 "required": [
@@ -138,37 +130,28 @@
                   "type": "object",
                   "properties": {
                     "bool": {
-                      "type": "boolean",
-                      "example": false
+                      "type": "boolean"
                     },
                     "integer": {
-                      "type": "integer",
-                      "format": "int64",
-                      "example": 3
+                      "type": "integer"
                     },
                     "float": {
-                      "type": "number",
-                      "example": 4.3
+                      "type": "number"
                     },
                     "array1": {
                       "type": "array",
                       "items": {
-                        "type": "string",
-                        "example": "3"
+                        "type": "string"
                       }
                     },
                     "object1": {
                       "type": "object",
                       "properties": {
                         "a": {
-                          "type": "integer",
-                          "format": "int64",
-                          "example": 3
+                          "type": "integer"
                         },
                         "b": {
-                          "type": "integer",
-                          "format": "int64",
-                          "example": 4
+                          "type": "integer"
                         }
                       },
                       "required": [
@@ -200,12 +183,10 @@
                   "type": "object",
                   "properties": {
                     "code": {
-                      "type": "string",
-                      "example": "ErrNoModel"
+                      "type": "string"
                     },
                     "message": {
-                      "type": "string",
-                      "example": "no model"
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -238,8 +219,7 @@
           "content": {
             "applicaton/xml": {
               "schema": {
-                "type": "string",
-                "example": ""
+                "type": "string"
               }
             }
           },
@@ -251,8 +231,7 @@
             "content": {
               "applicaton/xml": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -270,9 +249,7 @@
             "headers": {
               "X-RateLimit": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int64",
-                  "example": 10
+                  "type": "integer"
                 },
                 "required": true
               }
@@ -299,14 +276,13 @@
                 "type": "object",
                 "properties": {
                   "combine1": {
-                    "anyOf": [
+                    "type": "array",
+                    "items": [
                       {
                         "type": "object",
                         "properties": {
                           "a": {
-                            "type": "integer",
-                            "format": "int64",
-                            "example": 3
+                            "type": "integer"
                           }
                         },
                         "required": [
@@ -317,8 +293,7 @@
                         "type": "object",
                         "properties": {
                           "b": {
-                            "type": "string",
-                            "example": "v"
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -328,14 +303,13 @@
                     ]
                   },
                   "combine2": {
-                    "oneOf": [
+                    "type": "array",
+                    "items": [
                       {
                         "type": "object",
                         "properties": {
                           "a": {
-                            "type": "integer",
-                            "format": "int64",
-                            "example": 3
+                            "type": "integer"
                           }
                         },
                         "required": [
@@ -346,8 +320,7 @@
                         "type": "object",
                         "properties": {
                           "b": {
-                            "type": "string",
-                            "example": "v"
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -357,14 +330,13 @@
                     ]
                   },
                   "combine3": {
-                    "allOf": [
+                    "type": "array",
+                    "items": [
                       {
                         "type": "object",
                         "properties": {
                           "a": {
-                            "type": "integer",
-                            "format": "int64",
-                            "example": 3
+                            "type": "integer"
                           }
                         },
                         "required": [
@@ -375,8 +347,7 @@
                         "type": "object",
                         "properties": {
                           "b": {
-                            "type": "string",
-                            "example": "v"
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -402,8 +373,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": ""
+                  "type": "string"
                 }
               }
             }
@@ -430,14 +400,10 @@
         "type": "object",
         "properties": {
           "a": {
-            "type": "integer",
-            "format": "int64",
-            "example": 3
+            "type": "integer"
           },
           "b": {
-            "type": "integer",
-            "format": "int64",
-            "example": 4
+            "type": "integer"
           }
         },
         "required": [

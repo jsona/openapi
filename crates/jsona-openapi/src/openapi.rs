@@ -1,11 +1,10 @@
 use indexmap::IndexMap;
+use jsona_schema::Schema;
 use serde::{Deserialize, Serialize};
-use serde_json;
-use url;
 
 /// top level document
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct Spec {
+pub struct Openapi {
     /// This string MUST be the [semantic version number](https://semver.org/spec/v2.0.0.html)
     /// of the
     /// [OpenAPI Specification version](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#versions)
@@ -380,140 +379,6 @@ pub enum ParameterStyle {
     Simple,
 }
 
-// FIXME: Verify against OpenAPI 3.0
-/// The Schema Object allows the definition of input and output data types.
-/// These types can be objects, but also primitives and arrays.
-/// This object is an extended subset of the
-/// [JSON Schema Specification Wright Draft 00](http://json-schema.org/).
-/// For more information about the properties, see
-/// [JSON Schema Core](https://tools.ietf.org/html/draft-wright-json-schema-00) and
-/// [JSON Schema Validation](https://tools.ietf.org/html/draft-wright-json-schema-validation-00).
-/// Unless stated otherwise, the property definitions follow the JSON Schema.
-///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#schemaObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct Schema {
-    /// [JSON reference](https://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03)
-    /// path to another definition
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "$ref")]
-    pub ref_path: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "type")]
-    pub schema_type: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub format: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub items: Option<Box<Schema>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub properties: Option<IndexMap<String, Schema>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub title: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub default: Option<serde_json::Value>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub required: Option<Vec<String>>,
-
-    #[serde(skip_serializing_if = "Option::is_none", rename = "readOnly")]
-    pub read_only: Option<bool>,
-
-    /// A free-form property to include an example of an instance for this schema.
-    /// To represent examples that cannot be naturally represented in JSON or YAML,
-    /// a string value can be used to contain the example with escaping where necessary.
-    /// NOTE: According to [spec], _Primitive data types in the OAS are based on the
-    ///       types supported by the JSON Schema Specification Wright Draft 00._
-    ///       This suggest using
-    ///       [`serde_json::Value`](https://docs.serde.rs/serde_json/value/enum.Value.html). [spec][https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#data-types]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub example: Option<serde_json::value::Value>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "enum")]
-    pub enum_values: Option<Vec<serde_json::Value>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub nullable: Option<bool>,
-
-    // FIXME: Why can this be a "boolean" (as per the spec)? It doesn't make sense. Here it's not.
-    /// Value can be boolean or object. Inline or referenced schema MUST be of a
-    /// [Schema Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#schemaObject)
-    /// and not a standard JSON Schema.
-    ///
-    /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#properties>.
-    #[serde(
-        skip_serializing_if = "Option::is_none",
-        rename = "additionalProperties"
-    )]
-    pub additional_properties: Option<Box<Schema>>,
-
-    /// Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard
-    /// JSON Schema.
-    /// [allOf](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#allof)
-    #[serde(rename = "allOf", skip_serializing_if = "Option::is_none")]
-    pub all_of: Option<Vec<Schema>>,
-
-    /// Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard
-    /// JSON Schema.
-    /// [oneOf](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#oneof)
-    #[serde(rename = "oneOf", skip_serializing_if = "Option::is_none")]
-    pub one_of: Option<Vec<Schema>>,
-
-    /// Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard
-    /// JSON Schema.
-    /// [anyOf](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#anyof)
-    #[serde(rename = "anyOf", skip_serializing_if = "Option::is_none")]
-    pub any_of: Option<Vec<Schema>>,
-
-    /// Inline or referenced schema MUST be of a [Schema Object](#schemaObject) and not a standard
-    /// JSON Schema.
-    /// [not](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#not)
-    #[serde(rename = "not", skip_serializing_if = "Option::is_none")]
-    pub not: Option<Vec<Schema>>,
-
-    #[serde(rename = "maxLength", skip_serializing_if = "Option::is_none")]
-    pub max_length: Option<u32>,
-
-    #[serde(rename = "minLength", skip_serializing_if = "Option::is_none")]
-    pub min_length: Option<u32>,
-
-    /// [Specification extensions](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#specificationExtensions)
-    #[serde(flatten)]
-    pub extensions: IndexMap<String, String>,
-
-    #[serde(rename = "multipleOf", skip_serializing_if = "Option::is_none")]
-    pub multiple_of: Option<f64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub maximum: Option<f64>,
-    #[serde(rename = "exclusiveMaximum", skip_serializing_if = "Option::is_none")]
-    pub exclusive_maximum: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub minimum: Option<f64>,
-    #[serde(rename = "exclusiveMinimum", skip_serializing_if = "Option::is_none")]
-    pub exclusive_minimum: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pattern: Option<String>,
-    #[serde(rename = "maxItems", skip_serializing_if = "Option::is_none")]
-    pub max_items: Option<u32>,
-    #[serde(rename = "minItems", skip_serializing_if = "Option::is_none")]
-    pub min_items: Option<u32>,
-    #[serde(rename = "uniqueItems", skip_serializing_if = "Option::is_none")]
-    pub unique_items: Option<bool>,
-    #[serde(rename = "maxProperties", skip_serializing_if = "Option::is_none")]
-    pub max_properties: Option<u32>,
-    #[serde(rename = "minProperties", skip_serializing_if = "Option::is_none")]
-    pub min_properties: Option<u32>,
-}
-
 /// Describes a single response from an API Operation, including design-time, static `links`
 /// to operations based on the response.
 ///
@@ -830,7 +695,7 @@ pub enum SecurityScheme {
         bearer_format: String,
     },
     #[serde(rename = "oauth2")]
-    OAuth2 { flows: Flows },
+    OAuth2 { flows: Box<Flows> },
     #[serde(rename = "openIdConnect")]
     OpenIdConnect {
         #[serde(rename = "openIdConnectUrl")]
@@ -980,7 +845,7 @@ pub enum ObjectOrReference<T> {
 pub struct Components {
     /// An object to hold reusable Schema Objects.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub schemas: Option<IndexMap<String, ObjectOrReference<Schema>>>,
+    pub schemas: Option<IndexMap<String, Schema>>,
 
     /// An object to hold reusable Response Objects.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1024,59 +889,3 @@ pub struct Components {
 ///
 /// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#securityRequirementObject>.
 pub type SecurityRequirement = IndexMap<String, Vec<String>>;
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_security_scheme_oauth_deser() {
-        const IMPLICIT_OAUTH2_SAMPLE: &str = r#"{
-          "type": "oauth2",
-          "flows": {
-            "implicit": {
-              "authorizationUrl": "https://example.com/api/oauth/dialog",
-              "scopes": {
-                "write:pets": "modify pets in your account",
-                "read:pets": "read your pets"
-              }
-            },
-            "authorizationCode": {
-              "authorizationUrl": "https://example.com/api/oauth/dialog",
-              "tokenUrl": "https://example.com/api/oauth/token",
-              "scopes": {
-                "write:pets": "modify pets in your account",
-                "read:pets": "read your pets"
-              }
-            }
-          }
-        }"#;
-        let obj: SecurityScheme = serde_json::from_str(&IMPLICIT_OAUTH2_SAMPLE).unwrap();
-        match obj {
-            SecurityScheme::OAuth2 { flows } => {
-                assert!(flows.implicit.is_some());
-                let implicit = flows.implicit.unwrap();
-                assert_eq!(
-                    implicit.authorization_url,
-                    Url::parse("https://example.com/api/oauth/dialog").unwrap()
-                );
-                assert!(implicit.scopes.contains_key("write:pets"));
-                assert!(implicit.scopes.contains_key("read:pets"));
-
-                assert!(flows.authorization_code.is_some());
-                let auth_code = flows.authorization_code.unwrap();
-                assert_eq!(
-                    auth_code.authorization_url,
-                    Url::parse("https://example.com/api/oauth/dialog").unwrap()
-                );
-                assert_eq!(
-                    auth_code.token_url,
-                    Url::parse("https://example.com/api/oauth/token").unwrap()
-                );
-                assert!(implicit.scopes.contains_key("write:pets"));
-                assert!(implicit.scopes.contains_key("read:pets"));
-            }
-            _ => assert!(false, "wrong security scheme type"),
-        }
-    }
-}
