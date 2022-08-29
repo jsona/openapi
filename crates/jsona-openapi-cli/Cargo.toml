@@ -2,7 +2,7 @@
 name = "jsona-openapi-cli"
 version = "0.2.1"
 authors = ["sigoden <sigoden@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "convert jsona to openapi yaml/json"
 documentation = "https://github.com/sigoden/jsona-openapi/tree/master/core"
 repository = "https://github.com/sigoden/jsona-openapi"
