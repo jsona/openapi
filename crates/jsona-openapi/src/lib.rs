@@ -77,7 +77,7 @@ struct OpenapiParser {
     openapi: Openapi,
     routes: HashSet<String>,
     errors: Vec<OpenapiError>,
-    schema_defs: Rc<RefCell<IndexMap<String, Schema>>>,
+    definitions: Rc<RefCell<IndexMap<String, Schema>>>,
 }
 
 impl OpenapiParser {
@@ -93,18 +93,18 @@ impl OpenapiParser {
             openapi,
             routes,
             errors,
-            schema_defs: Rc::new(RefCell::new(schemas)),
+            definitions: Rc::new(RefCell::new(schemas)),
         };
         parser.parse_paths(node);
         let OpenapiParser {
             mut openapi,
             errors,
-            schema_defs,
+            definitions,
             ..
         } = parser;
         if errors.is_empty() {
-            if !schema_defs.borrow().is_empty() {
-                get_components_mut(&mut openapi).schemas = Some(schema_defs.take());
+            if !definitions.borrow().is_empty() {
+                get_components_mut(&mut openapi).schemas = Some(definitions.take());
             }
             Ok(openapi)
         } else {
@@ -114,7 +114,7 @@ impl OpenapiParser {
 
     fn parse_openapi(errors: &mut Vec<OpenapiError>, value: &Node) -> Openapi {
         let mut spec = Openapi {
-            openapi: "3.0.0".into(),
+            openapi: "3.0.3".into(),
             info: Info {
                 title: "openapi".into(),
                 version: "0.1.0".into(),
@@ -217,16 +217,16 @@ impl OpenapiParser {
         match value.get_as_string("route") {
             Some((key, Some(value))) => {
                 let keys = keys.join(key);
-                let splited_route: Vec<&str> = value.value().split(' ').collect();
+                let splitted_route: Vec<&str> = value.value().split(' ').collect();
                 let err = || OpenapiError::new(keys.clone(), "is invalid");
-                if splited_route.len() != 2 {
+                if splitted_route.len() != 2 {
                     return Err(err());
                 }
-                let method = MethodKind::from_str(splited_route[0]).ok_or_else(err)?;
-                let path = splited_route[1].trim();
+                let method = MethodKind::from_str(splitted_route[0]).ok_or_else(err)?;
+                let path = splitted_route[1].trim();
                 let path_parts: Vec<String> = path.split('/').map(|v| v.to_string()).collect();
-                let cononcial_route = format!("{} {}", method, path);
-                if !self.routes.insert(cononcial_route) {
+                let canonical_route = format!("{} {}", method, path);
+                if !self.routes.insert(canonical_route) {
                     return Err(OpenapiError::new(keys, "is conflict"));
                 }
                 Ok((method, path_parts))
@@ -511,7 +511,7 @@ impl OpenapiParser {
         let scope = SchemaParser {
             keys: keys.clone(),
             node: value.clone(),
-            defs: self.schema_defs.clone(),
+            definitions: self.definitions.clone(),
             ref_prefix: Rc::new("#/components/schemas/".to_string()),
             prefer_optional: false,
         };

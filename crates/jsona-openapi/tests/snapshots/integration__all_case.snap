@@ -5,8 +5,8 @@ expression: output
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Sample Api",
-    "version": "0.1.9"
+    "version": "0.1.9",
+    "title": "Sample Api"
   },
   "servers": [
     {
@@ -27,35 +27,35 @@ expression: output
           {
             "name": "b",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           },
           {
             "name": "d",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "integer"
-            },
-            "required": true
+            }
           },
           {
             "name": "X-App-Key",
             "in": "headers",
             "description": "x header",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           },
           {
             "name": "kind",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
-            },
-            "required": false
+            }
           }
         ],
         "requestBody": {
@@ -248,10 +248,10 @@ expression: output
             "description": "",
             "headers": {
               "X-RateLimit": {
+                "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "required": true
+                }
               }
             },
             "content": {

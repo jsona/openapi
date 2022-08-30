@@ -5,10 +5,10 @@ expression: output
 {
   "openapi": "3.0.2",
   "info": {
+    "version": "1.0.6-SNAPSHOT",
     "title": "Swagger Petstore - OpenAPI 3.0",
     "description": "\nThis is a sample Pet Store Server based on the OpenAPI 3.0 specification. \nYou can find out more about\n\nSwagger at [http://swagger.io](http://swagger.io). In the third iteration of\nthe pet store, we've switched to the design first approach!\n\nYou can now help us improve the API whether it's by making changes to the\ndefinition itself or to the code.\n\nThat way, with time, we can improve the API in general, and expose some of\nthe new features in OAS3.\n\n\nSome useful links:\n\n- [The Pet Store\nrepository](https://github.com/swagger-api/swagger-petstore)\n\n- [The source API definition for the Pet\nStore](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)",
     "termsOfService": "http://swagger.io/terms/",
-    "version": "1.0.6-SNAPSHOT",
     "contact": {
       "email": "apiteam@swagger.io"
     },
@@ -154,6 +154,7 @@ expression: output
           {
             "name": "status",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "string",
               "default": "available",
@@ -162,8 +163,7 @@ expression: output
                 "pending",
                 "sold"
               ]
-            },
-            "required": false
+            }
           }
         ],
         "responses": {
@@ -202,13 +202,13 @@ expression: output
           {
             "name": "status",
             "in": "query",
+            "required": false,
             "schema": {
               "type": "array",
               "items": {
                 "type": "string"
               }
-            },
-            "required": false
+            }
           }
         ],
         "responses": {
@@ -247,10 +247,10 @@ expression: output
           {
             "name": "petId",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "integer"
-            },
-            "required": true
+            }
           }
         ],
         "responses": {
@@ -285,26 +285,26 @@ expression: output
           {
             "name": "petId",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "integer"
-            },
-            "required": true
+            }
           },
           {
             "name": "name",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           },
           {
             "name": "status",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           }
         ],
         "responses": {
@@ -338,18 +338,18 @@ expression: output
           {
             "name": "petId",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "integer"
-            },
-            "required": true
+            }
           },
           {
             "name": "api_key",
             "in": "headers",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           }
         ],
         "responses": {
@@ -385,18 +385,18 @@ expression: output
           {
             "name": "petId",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "integer"
-            },
-            "required": true
+            }
           },
           {
             "name": "additionalMetadata",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           }
         ],
         "requestBody": {
@@ -511,10 +511,10 @@ expression: output
           {
             "name": "orderId",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "integer"
-            },
-            "required": true
+            }
           }
         ],
         "responses": {
@@ -561,10 +561,10 @@ expression: output
           {
             "name": "orderId",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "integer"
-            },
-            "required": true
+            }
           }
         ],
         "responses": {
@@ -667,18 +667,18 @@ expression: output
           {
             "name": "username",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           },
           {
             "name": "password",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           }
         ],
         "responses": {
@@ -687,18 +687,18 @@ expression: output
             "headers": {
               "X-Rate-Limit": {
                 "description": "calls per hour allowed by the user",
+                "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "required": true
+                }
               },
               "X-Expires-After": {
                 "description": "date in UTC when toekn expires",
+                "required": true,
                 "schema": {
                   "type": "string",
                   "format": "date-time"
-                },
-                "required": true
+                }
               }
             },
             "content": {
@@ -744,10 +744,10 @@ expression: output
           {
             "name": "username",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           }
         ],
         "responses": {
@@ -773,10 +773,10 @@ expression: output
           {
             "name": "username",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           }
         ],
         "requestBody": {
@@ -812,10 +812,10 @@ expression: output
           {
             "name": "username",
             "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "required": true
+            }
           }
         ],
         "responses": {

@@ -26,38 +26,32 @@ pub struct Openapi {
     // FIXME: Provide a default value as specified in documentation instead of `None`.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub servers: Option<Vec<Server>>,
-
-    // FIXME: Implement
-    // /// A declaration of which security mechanisms can be used across the API.
-    // /// The list of  values includes alternative security requirement objects that can be used.
-    // /// Only one of the security requirement objects need to be satisfied to authorize a request.
-    // /// Individual operations can override this definition.
+    /// Additional external documentation.
+    /// A declaration of which security mechanisms can be used across the API.
+    /// The list of  values includes alternative security requirement objects that can be used.
+    /// Only one of the security requirement objects need to be satisfied to authorize a request.
+    /// Individual operations can override this definition.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub security: Option<Vec<SecurityRequirement>>,
     /// A list of tags used by the specification with additional metadata.
-    ///The order of the tags can be used to reflect on their order by the parsing tools.
+    /// The order of the tags can be used to reflect on their order by the parsing tools.
     /// Not all tags that are used by the
     /// [Operation Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#operationObject)
     /// must be declared. The tags that are not declared MAY be organized randomly or
     /// based on the tools' logic. Each tag name in the list MUST be unique.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<Tag>>,
-
+    #[serde(skip_serializing_if = "Option::is_none", rename = "externalDocs")]
+    pub external_docs: Option<ExternalDoc>,
     /// Holds the relative paths to the individual endpoints and their operations. The path is
     /// appended to the URL from the
     /// [`Server Object`](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#serverObject)
     /// in order to construct the full URL. The Paths MAY be empty, due to
     /// [ACL constraints](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#securityFiltering).
     pub paths: IndexMap<String, PathItem>,
-
     /// An element to hold various schemas for the specification.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub components: Option<Components>,
-
-    /// Additional external documentation.
-    #[serde(skip_serializing_if = "Option::is_none", rename = "externalDocs")]
-    pub external_docs: Option<ExternalDoc>,
-    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
 }
 
 /// General information about the API.
@@ -67,6 +61,10 @@ pub struct Openapi {
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
 // #[serde(rename_all = "lowercase")]
 pub struct Info {
+    /// The version of the OpenAPI document (which is distinct from the [OpenAPI Specification
+    /// version](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#oasVersion)
+    /// or the API implementation version).
+    pub version: String,
     /// The title of the application.
     pub title: String,
     /// A short description of the application. CommonMark syntax MAY be used for rich text representation.
@@ -75,10 +73,6 @@ pub struct Info {
     /// A URL to the Terms of Service for the API. MUST be in the format of a URL.
     #[serde(rename = "termsOfService", skip_serializing_if = "Option::is_none")]
     pub terms_of_service: Option<Url>,
-    /// The version of the OpenAPI document (which is distinct from the [OpenAPI Specification
-    /// version](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#oasVersion)
-    /// or the API implementation version).
-    pub version: String,
     /// The contact information for the exposed API.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub contact: Option<Contact>,
@@ -111,7 +105,6 @@ pub struct Contact {
     // TODO: Make sure the email is a valid email
     #[serde(skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
-    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions
 }
 
 /// License information for the exposed API.
@@ -124,7 +117,6 @@ pub struct License {
     /// A URL to the license used for the API.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<Url>,
-    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
 }
 
 /// An object representing a Server.
@@ -164,6 +156,51 @@ pub struct ServerVariable {
     /// [CommonMark]: https://spec.commonmark.org/
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+}
+
+/// Holds a set of reusable objects for different aspects of the OAS.
+///
+/// All objects defined within the components object will have no effect on the API unless
+/// they are explicitly referenced from properties outside the components object.
+///
+/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#componentsObject>.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+pub struct Components {
+    /// An object to hold reusable Schema Objects.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub schemas: Option<IndexMap<String, Schema>>,
+
+    /// An object to hold reusable Response Objects.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub responses: Option<IndexMap<String, ObjectOrReference<Response>>>,
+
+    /// An object to hold reusable Parameter Objects.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parameters: Option<IndexMap<String, ObjectOrReference<Parameter>>>,
+
+    /// An object to hold reusable Example
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub examples: Option<IndexMap<String, ObjectOrReference<Example>>>,
+
+    /// An object to hold reusable Request Body Objects.
+    #[serde(skip_serializing_if = "Option::is_none", rename = "requestBodies")]
+    pub request_bodies: Option<IndexMap<String, ObjectOrReference<RequestBody>>>,
+
+    /// An object to hold reusable Header Objects.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub headers: Option<IndexMap<String, ObjectOrReference<Header>>>,
+
+    /// An object to hold reusable Security Scheme Objects.
+    #[serde(skip_serializing_if = "Option::is_none", rename = "securitySchemes")]
+    pub security_schemes: Option<IndexMap<String, ObjectOrReference<SecurityScheme>>>,
+
+    /// An object to hold reusable Link Objects.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub links: Option<IndexMap<String, ObjectOrReference<Link>>>,
+
+    /// An object to hold reusable Callback Objects.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub callbacks: Option<IndexMap<String, ObjectOrReference<Callback>>>,
 }
 
 /// Describes the operations available on a single path.
@@ -233,7 +270,6 @@ pub struct PathItem {
     /// [OpenAPI Object's components/parameters](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#componentsParameters).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Vec<ObjectOrReference<Parameter>>>,
-    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
 }
 
 /// Describes a single API operation on a path.
@@ -332,6 +368,20 @@ pub struct Operation {
     pub servers: Option<Vec<Server>>,
 }
 
+/// Allows referencing an external resource for extended documentation.
+///
+/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#externalDocumentationObject>.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+pub struct ExternalDoc {
+    /// The URL for the target documentation.
+    pub url: Url,
+
+    /// A short description of the target documentation.
+    /// [CommonMark syntax](http://spec.commonmark.org/) MAY be used for rich text representation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+}
+
 // FIXME: Verify against OpenAPI 3.0
 /// Describes a single operation parameter.
 /// A unique parameter is defined by a combination of a
@@ -352,12 +402,16 @@ pub struct Parameter {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub schema: Option<Schema>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub required: Option<bool>,
     /// Specifies that a parameter is deprecated and SHOULD be transitioned out of usage. Default value is false.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub deprecated: Option<bool>,
+    /// Sets the ability to pass empty-valued parameters.
+    /// This is valid only for query parameters and allows sending a parameter with an empty value. Default value is false.
+    /// If style is used, and if behavior is n/a (cannot be serialized), the value of allowEmptyValue SHALL be ignored.
+    /// Use of this property is NOT RECOMMENDED, as it is likely to be removed in a later revision.
+    #[serde(rename = "allowEmptyValue", skip_serializing_if = "Option::is_none")]
+    pub allow_empty_value: Option<bool>,
     /// Describes how the parameter value will be serialized depending on the type of the parameter
     /// value. Default values (based on value of in): for `query` - `form`; for `path` - `simple`; for
     /// `header` - `simple`; for cookie - `form`.
@@ -370,13 +424,118 @@ pub struct Parameter {
     /// For all other styles, the default value is false.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub explode: Option<bool>,
+    /// Determines whether the parameter value SHOULD allow reserved characters
+    /// as defined by RFC3986 :/?#[]@!$&'()*+,;= to be included without percent-encoding.
+    /// This property only applies to parameters with an in value of query. The default value is false.
+    #[serde(rename = "allowReserved", skip_serializing_if = "Option::is_none")]
+    pub allow_reserved: Option<bool>,
+    /// The schema defining the type used for the parameter.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub schema: Option<Schema>,
+    /// Example of the parameter type.
+    #[serde(flatten, skip_serializing_if = "Option::is_none")]
+    pub examples: Option<OneOrMultiExample>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum ParameterStyle {
+    Label,
+    Matrix,
     Form,
     Simple,
+    SpaceDelimited,
+    PipeDelimited,
+    DeepObject,
+}
+
+/// Describes a single request body.
+///
+/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#requestBodyObject>.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+pub struct RequestBody {
+    /// A brief description of the request body. This could contain examples of use.
+    /// [CommonMark syntax](http://spec.commonmark.org/) MAY be used for rich text representation.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    /// The content of the request body. The key is a media type or
+    /// [media type range](https://tools.ietf.org/html/rfc7231#appendix-D) and the
+    /// value describes it. For requests that match multiple keys, only the most specific key
+    /// is applicable. e.g. text/plain overrides text/*
+    pub content: IndexMap<String, MediaType>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub required: Option<bool>,
+}
+
+/// Each Media Type Object provides schema and examples for the media type identified by its key.
+///
+/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#media-type-object>.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+pub struct MediaType {
+    /// The schema defining the type used for the request body.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub schema: Option<Schema>,
+
+    /// Example of the media type.
+    #[serde(flatten, skip_serializing_if = "Option::is_none")]
+    pub examples: Option<OneOrMultiExample>,
+
+    /// A map between a property name and its encoding information. The key, being the
+    /// property name, MUST exist in the schema as a property. The encoding object SHALL
+    /// only apply to `requestBody` objects when the media type is `multipart`
+    /// or `application/x-www-form-urlencoded`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub encoding: Option<IndexMap<String, Encoding>>,
+}
+
+/// A single encoding definition applied to a single schema property.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+pub struct Encoding {
+    /// The Content-Type for encoding a specific property. Default value depends on the
+    /// property type: for `string` with `format` being `binary` – `application/octet-stream`;
+    /// for other primitive types – `text/plain`; for `object` - `application/json`;
+    /// for `array` – the default is defined based on the inner type. The value can be a
+    /// specific media type (e.g. `application/json`), a wildcard media type
+    /// (e.g. `image/*`), or a comma-separated list of the two types.
+    #[serde(skip_serializing_if = "Option::is_none", rename = "contentType")]
+    pub content_type: Option<String>,
+
+    /// A map allowing additional information to be provided as headers, for example
+    /// `Content-Disposition`.  `Content-Type` is described separately and SHALL be
+    /// ignored in this section. This property SHALL be ignored if the request body
+    /// media type is not a `multipart`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub headers: Option<IndexMap<String, ObjectOrReference<Header>>>,
+
+    /// Describes how a specific property value will be serialized depending on its type.
+    /// See [Parameter Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterObject)
+    /// for details on the
+    /// [`style`](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterStyle)
+    /// property. The behavior follows the same values as `query` parameters, including
+    /// default values. This property SHALL be ignored if the request body media type
+    /// is not `application/x-www-form-urlencoded`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub style: Option<ParameterStyle>,
+
+    /// When this is true, property values of type `array` or `object` generate
+    /// separate parameters for each value of the array, or key-value-pair of the map.
+    /// For other types of properties this property has no effect. When
+    /// [`style`](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#encodingStyle)
+    /// is `form`, the default value is `true`. For all other styles, the default value
+    /// is `false`. This property SHALL be ignored if the request body media type is
+    /// not `application/x-www-form-urlencoded`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub explode: Option<bool>,
+
+    /// Determines whether the parameter value SHOULD allow reserved characters, as defined
+    /// by [RFC3986](https://tools.ietf.org/html/rfc3986#section-2.2) `:/?#[]@!$&'()*+,;=`
+    /// to be included without percent-encoding. The default value is `false`. This
+    /// property SHALL be ignored if the request body media type is
+    /// not `application/x-www-form-urlencoded`.
+    #[serde(skip_serializing_if = "Option::is_none", rename = "allowReserved")]
+    pub allow_reserved: Option<bool>,
 }
 
 /// Describes a single response from an API Operation, including design-time, static `links`
@@ -408,63 +567,63 @@ pub struct Response {
     /// [Component Objects](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#componentsObject).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub links: Option<IndexMap<String, ObjectOrReference<Link>>>,
-    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
 }
 
-/// The Header Object follows the structure of the
-/// [Parameter Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterObject)
-/// with the following changes:
-/// 1. `name` MUST NOT be specified, it is given in the corresponding `headers` map.
-/// 1. `in` MUST NOT be specified, it is implicitly in `header`.
-/// 1. All traits that are affected by the location MUST be applicable to a location of
-///    `header` (for example, [`style`](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterStyle)).
+/// A map of possible out-of band callbacks related to the parent operation. Each value in
+/// the map is a Path Item Object that describes a set of requests that may be initiated by
+/// the API provider and the expected responses. The key value used to identify the callback
+/// object is an expression, evaluated at runtime, that identifies a URL to use for the
+/// callback operation.
 ///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#headerObject>.
+/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#callbackObject>.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct Header {
-    /// A brief description of the parameter. This could contain examples
-    /// of use.  GitHub Flavored Markdown is allowed.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub schema: Option<Schema>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub required: Option<bool>,
-    /// Specifies that a parameter is deprecated and SHOULD be transitioned out of usage. Default value is false.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub deprecated: Option<bool>,
-    /// Describes how the parameter value will be serialized depending on the type of the parameter
-    /// value. Default values (based on value of in): for `query` - `form`; for `path` - `simple`; for
-    /// `header` - `simple`; for cookie - `form`.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub style: Option<ParameterStyle>,
-    /// When this is true, parameter values of type array or object generate separate parameters
-    /// for each value of the array or key-value pair of the map.
-    /// For other types of parameters this property has no effect.
-    /// When style is form, the default value is true.
-    /// For all other styles, the default value is false.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub explode: Option<bool>,
+pub struct Callback(
+    /// A Path Item Object used to define a callback request and expected responses.
+    serde_json::Value,
+);
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[serde(untagged)]
+pub enum OneOrMultiExample {
+    /// Example of the media type. The example object SHOULD be in the correct format as
+    /// specified by the media type. The `example` field is mutually exclusive of the
+    /// `examples` field. Furthermore, if referencing a `schema` which contains an example,
+    /// the `example` value SHALL override the example provided by the schema.
+    Example { example: serde_json::Value },
+    /// Examples of the media type. Each example object SHOULD match the media type and
+    /// specified schema if present. The `examples` field is mutually exclusive of
+    /// the `example` field. Furthermore, if referencing a `schema` which contains an
+    /// example, the `examples` value SHALL override the example provided by the schema.
+    Examples {
+        examples: IndexMap<String, ObjectOrReference<Example>>,
+    },
 }
 
-/// Describes a single request body.
-///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#requestBodyObject>.
+/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#exampleObject>.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct RequestBody {
-    /// A brief description of the request body. This could contain examples of use.
+pub struct Example {
+    /// Short description for the example.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub summary: Option<String>,
+
+    /// Long description for the example.
     /// [CommonMark syntax](http://spec.commonmark.org/) MAY be used for rich text representation.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
-
-    /// The content of the request body. The key is a media type or
-    /// [media type range](https://tools.ietf.org/html/rfc7231#appendix-D) and the
-    /// value describes it. For requests that match multiple keys, only the most specific key
-    /// is applicable. e.g. text/plain overrides text/*
-    pub content: IndexMap<String, MediaType>,
-
+    // FIXME: Implement (merge with externalValue as enum)
+    /// Embedded literal example. The `value` field and `externalValue` field are mutually
+    /// exclusive. To represent examples of media types that cannot naturally represented
+    /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub required: Option<bool>,
+    pub value: Option<serde_json::Value>,
+    // FIXME: Implement (merge with value as enum)
+    // /// A URL that points to the literal example. This provides the capability to reference
+    // /// examples that cannot easily be included in JSON or YAML documents. The `value` field
+    // /// and `externalValue` field are mutually exclusive.
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub externalValue: Option<String>,
+
+    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
 }
 
 /// The Link object represents a possible design-time link for a response.
@@ -559,117 +718,84 @@ pub enum Link {
     },
 }
 
-/// Each Media Type Object provides schema and examples for the media type identified by its key.
+/// The Header Object follows the structure of the
+/// [Parameter Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterObject)
+/// with the following changes:
+/// 1. `name` MUST NOT be specified, it is given in the corresponding `headers` map.
+/// 1. `in` MUST NOT be specified, it is implicitly in `header`.
+/// 1. All traits that are affected by the location MUST be applicable to a location of
+///    `header` (for example, [`style`](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterStyle)).
 ///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#media-type-object>.
+/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#headerObject>.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct MediaType {
-    /// The schema defining the type used for the request body.
+pub struct Header {
+    /// A brief description of the parameter. This could contain examples
+    /// of use.  GitHub Flavored Markdown is allowed.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub schema: Option<Schema>,
-
-    /// Example of the media type.
-    #[serde(flatten, skip_serializing_if = "Option::is_none")]
-    pub examples: Option<MediaTypeExample>,
-
-    /// A map between a property name and its encoding information. The key, being the
-    /// property name, MUST exist in the schema as a property. The encoding object SHALL
-    /// only apply to `requestBody` objects when the media type is `multipart`
-    /// or `application/x-www-form-urlencoded`.
+    pub description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub encoding: Option<IndexMap<String, Encoding>>,
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-#[serde(untagged)]
-pub enum MediaTypeExample {
-    /// Example of the media type. The example object SHOULD be in the correct format as
-    /// specified by the media type. The `example` field is mutually exclusive of the
-    /// `examples` field. Furthermore, if referencing a `schema` which contains an example,
-    /// the `example` value SHALL override the example provided by the schema.
-    Example { example: serde_json::Value },
-    /// Examples of the media type. Each example object SHOULD match the media type and
-    /// specified schema if present. The `examples` field is mutually exclusive of
-    /// the `example` field. Furthermore, if referencing a `schema` which contains an
-    /// example, the `examples` value SHALL override the example provided by the schema.
-    Examples {
-        examples: IndexMap<String, ObjectOrReference<Example>>,
-    },
-}
-
-/// A single encoding definition applied to a single schema property.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct Encoding {
-    /// The Content-Type for encoding a specific property. Default value depends on the
-    /// property type: for `string` with `format` being `binary` – `application/octet-stream`;
-    /// for other primitive types – `text/plain`; for `object` - `application/json`;
-    /// for `array` – the default is defined based on the inner type. The value can be a
-    /// specific media type (e.g. `application/json`), a wildcard media type
-    /// (e.g. `image/*`), or a comma-separated list of the two types.
-    #[serde(skip_serializing_if = "Option::is_none", rename = "contentType")]
-    pub content_type: Option<String>,
-
-    /// A map allowing additional information to be provided as headers, for example
-    /// `Content-Disposition`.  `Content-Type` is described separately and SHALL be
-    /// ignored in this section. This property SHALL be ignored if the request body
-    /// media type is not a `multipart`.
+    pub required: Option<bool>,
+    /// Specifies that a parameter is deprecated and SHOULD be transitioned out of usage. Default value is false.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub headers: Option<IndexMap<String, ObjectOrReference<Header>>>,
-
-    /// Describes how a specific property value will be serialized depending on its type.
-    /// See [Parameter Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterObject)
-    /// for details on the
-    /// [`style`](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#parameterStyle)
-    /// property. The behavior follows the same values as `query` parameters, including
-    /// default values. This property SHALL be ignored if the request body media type
-    /// is not `application/x-www-form-urlencoded`.
+    pub deprecated: Option<bool>,
+    /// Sets the ability to pass empty-valued parameters.
+    /// This is valid only for query parameters and allows sending a parameter with an empty value. Default value is false.
+    /// If style is used, and if behavior is n/a (cannot be serialized), the value of allowEmptyValue SHALL be ignored.
+    /// Use of this property is NOT RECOMMENDED, as it is likely to be removed in a later revision.
+    #[serde(rename = "allowEmptyValue", skip_serializing_if = "Option::is_none")]
+    pub allow_empty_value: Option<bool>,
+    /// Describes how the parameter value will be serialized depending on the type of the parameter
+    /// value. Default values (based on value of in): for `query` - `form`; for `path` - `simple`; for
+    /// `header` - `simple`; for cookie - `form`.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub style: Option<String>,
-
-    /// When this is true, property values of type `array` or `object` generate
-    /// separate parameters for each value of the array, or key-value-pair of the map.
-    /// For other types of properties this property has no effect. When
-    /// [`style`](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#encodingStyle)
-    /// is `form`, the default value is `true`. For all other styles, the default value
-    /// is `false`. This property SHALL be ignored if the request body media type is
-    /// not `application/x-www-form-urlencoded`.
+    pub style: Option<ParameterStyle>,
+    /// When this is true, parameter values of type array or object generate separate parameters
+    /// for each value of the array or key-value pair of the map.
+    /// For other types of parameters this property has no effect.
+    /// When style is form, the default value is true.
+    /// For all other styles, the default value is false.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub explode: Option<bool>,
-
-    /// Determines whether the parameter value SHOULD allow reserved characters, as defined
-    /// by [RFC3986](https://tools.ietf.org/html/rfc3986#section-2.2) `:/?#[]@!$&'()*+,;=`
-    /// to be included without percent-encoding. The default value is `false`. This
-    /// property SHALL be ignored if the request body media type is
-    /// not `application/x-www-form-urlencoded`.
-    #[serde(skip_serializing_if = "Option::is_none", rename = "allowReserved")]
+    /// Determines whether the parameter value SHOULD allow reserved characters
+    /// as defined by RFC3986 :/?#[]@!$&'()*+,;= to be included without percent-encoding.
+    /// This property only applies to parameters with an in value of query. The default value is false.
+    #[serde(rename = "allowReserved", skip_serializing_if = "Option::is_none")]
     pub allow_reserved: Option<bool>,
+    /// The schema defining the type used for the parameter.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub schema: Option<Schema>,
+    /// Example of the parameter type.
+    #[serde(flatten, skip_serializing_if = "Option::is_none")]
+    pub examples: Option<OneOrMultiExample>,
 }
 
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#exampleObject>.
+/// Adds metadata to a single tag that is used by the
+/// [Operation Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#operationObject).
+/// It is not mandatory to have a Tag Object per tag defined in the Operation Object instances.
+///
+/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#tagObject>.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct Example {
-    /// Short description for the example.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub summary: Option<String>,
-
-    /// Long description for the example.
+pub struct Tag {
+    /// The name of the tag.
+    pub name: String,
+    /// A short description for the tag.
     /// [CommonMark syntax](http://spec.commonmark.org/) MAY be used for rich text representation.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
-    // FIXME: Implement (merge with externalValue as enum)
-    /// Embedded literal example. The `value` field and `externalValue` field are mutually
-    /// exclusive. To represent examples of media types that cannot naturally represented
-    /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
+    /// Additional external documentation for this tag.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<serde_json::Value>,
-    // FIXME: Implement (merge with value as enum)
-    // /// A URL that points to the literal example. This provides the capability to reference
-    // /// examples that cannot easily be included in JSON or YAML documents. The `value` field
-    // /// and `externalValue` field are mutually exclusive.
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // pub externalValue: Option<String>,
+    pub external_docs: Option<Vec<ExternalDoc>>,
+}
 
-    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
+/// A simple object to allow referencing other components in the specification, internally and externally.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[serde(untagged)]
+pub enum ObjectOrReference<T> {
+    Object(T),
+    Ref {
+        #[serde(rename = "$ref")]
+        ref_path: String,
+    },
 }
 
 /// Defines a security scheme that can be used by the operations. Supported schemes are
@@ -766,119 +892,6 @@ pub struct AuthorizationCodeFlow {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub refresh_url: Option<Url>,
     pub scopes: IndexMap<String, String>,
-}
-
-// TODO: Implement
-/// A map of possible out-of band callbacks related to the parent operation. Each value in
-/// the map is a Path Item Object that describes a set of requests that may be initiated by
-/// the API provider and the expected responses. The key value used to identify the callback
-/// object is an expression, evaluated at runtime, that identifies a URL to use for the
-/// callback operation.
-///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#callbackObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct Callback(
-    /// A Path Item Object used to define a callback request and expected responses.
-    serde_json::Value, // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
-);
-
-// FIXME: Implement
-// /// Allows configuration of the supported OAuth Flows.
-// /// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#oauthFlowsObject
-// #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-// pub struct OAuthFlows {
-// }
-
-/// Adds metadata to a single tag that is used by the
-/// [Operation Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#operationObject).
-/// It is not mandatory to have a Tag Object per tag defined in the Operation Object instances.
-///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#tagObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct Tag {
-    /// The name of the tag.
-    pub name: String,
-
-    /// A short description for the tag.
-    /// [CommonMark syntax](http://spec.commonmark.org/) MAY be used for rich text representation.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-    // /// Additional external documentation for this tag.
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // pub external_docs: Option<Vec<ExternalDoc>>,
-
-    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
-}
-
-/// Allows referencing an external resource for extended documentation.
-///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#externalDocumentationObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-pub struct ExternalDoc {
-    /// The URL for the target documentation.
-    pub url: Url,
-
-    /// A short description of the target documentation.
-    /// [CommonMark syntax](http://spec.commonmark.org/) MAY be used for rich text representation.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-#[serde(untagged)]
-pub enum ObjectOrReference<T> {
-    Object(T),
-    Ref {
-        #[serde(rename = "$ref")]
-        ref_path: String,
-    },
-}
-
-/// Holds a set of reusable objects for different aspects of the OAS.
-///
-/// All objects defined within the components object will have no effect on the API unless
-/// they are explicitly referenced from properties outside the components object.
-///
-/// See <https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#componentsObject>.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
-pub struct Components {
-    /// An object to hold reusable Schema Objects.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub schemas: Option<IndexMap<String, Schema>>,
-
-    /// An object to hold reusable Response Objects.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub responses: Option<IndexMap<String, ObjectOrReference<Response>>>,
-
-    /// An object to hold reusable Parameter Objects.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub parameters: Option<IndexMap<String, ObjectOrReference<Parameter>>>,
-
-    /// An object to hold reusable Example
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub examples: Option<IndexMap<String, ObjectOrReference<Example>>>,
-
-    /// An object to hold reusable Request Body Objects.
-    #[serde(skip_serializing_if = "Option::is_none", rename = "requestBodies")]
-    pub request_bodies: Option<IndexMap<String, ObjectOrReference<RequestBody>>>,
-
-    /// An object to hold reusable Header Objects.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub headers: Option<IndexMap<String, ObjectOrReference<Header>>>,
-
-    /// An object to hold reusable Security Scheme Objects.
-    #[serde(skip_serializing_if = "Option::is_none", rename = "securitySchemes")]
-    pub security_schemes: Option<IndexMap<String, ObjectOrReference<SecurityScheme>>>,
-
-    /// An object to hold reusable Link Objects.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub links: Option<IndexMap<String, ObjectOrReference<Link>>>,
-
-    /// An object to hold reusable Callback Objects.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub callbacks: Option<IndexMap<String, ObjectOrReference<Callback>>>,
-    // TODO: Add "Specification Extensions" https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#specificationExtensions}
 }
 
 /// Lists the required security schemes to execute this operation. The name used for each property MUST correspond to a security scheme declared in the Security Schemes under the Components Object.
