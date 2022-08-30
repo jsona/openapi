@@ -77,7 +77,7 @@ struct OpenapiParser {
     openapi: Openapi,
     routes: HashSet<String>,
     errors: Vec<OpenapiError>,
-    definitions: Rc<RefCell<IndexMap<String, Schema>>>,
+    defs: Rc<RefCell<IndexMap<String, Schema>>>,
 }
 
 impl OpenapiParser {
@@ -93,18 +93,18 @@ impl OpenapiParser {
             openapi,
             routes,
             errors,
-            definitions: Rc::new(RefCell::new(schemas)),
+            defs: Rc::new(RefCell::new(schemas)),
         };
         parser.parse_paths(node);
         let OpenapiParser {
             mut openapi,
             errors,
-            definitions,
+            defs,
             ..
         } = parser;
         if errors.is_empty() {
-            if !definitions.borrow().is_empty() {
-                get_components_mut(&mut openapi).schemas = Some(definitions.take());
+            if !defs.borrow().is_empty() {
+                get_components_mut(&mut openapi).schemas = Some(defs.take());
             }
             Ok(openapi)
         } else {
@@ -114,7 +114,7 @@ impl OpenapiParser {
 
     fn parse_openapi(errors: &mut Vec<OpenapiError>, value: &Node) -> Openapi {
         let mut spec = Openapi {
-            openapi: "3.0.3".into(),
+            openapi: "3.0".into(),
             info: Info {
                 title: "openapi".into(),
                 version: "0.1.0".into(),
@@ -356,6 +356,13 @@ impl OpenapiParser {
         let schema = self.parse_schema(keys, value)?;
         let media_type = MediaType {
             schema: Some(schema),
+            examples: if exist_annotation(value, "@example") {
+                Some(OneOrMultiExample::Example {
+                    example: value.to_plain_json(),
+                })
+            } else {
+                None
+            },
             ..Default::default()
         };
         let mut content = IndexMap::default();
@@ -451,6 +458,14 @@ impl OpenapiParser {
         parameter.description = parse_string_annotation(keys, value, "@describe")?;
         parameter.required = Some(!exist_annotation(value, "@optional"));
         parameter.schema = Some(self.parse_schema(keys, value)?);
+        parameter.examples = if exist_annotation(value, "@example") {
+            Some(OneOrMultiExample::Example {
+                example: value.to_plain_json(),
+            })
+        } else {
+            None
+        };
+
         let parameter_object = ObjectOrReference::Object(parameter);
 
         if let Some(name) = parse_string_annotation(keys, value, "@def")? {
@@ -498,6 +513,13 @@ impl OpenapiParser {
         let schema = self.parse_schema(keys, value)?;
         let media_type = MediaType {
             schema: Some(schema),
+            examples: if exist_annotation(value, "@example") {
+                Some(OneOrMultiExample::Example {
+                    example: value.to_plain_json(),
+                })
+            } else {
+                None
+            },
             ..Default::default()
         };
         response
@@ -511,7 +533,7 @@ impl OpenapiParser {
         let scope = SchemaParser {
             keys: keys.clone(),
             node: value.clone(),
-            definitions: self.definitions.clone(),
+            defs: self.defs.clone(),
             ref_prefix: Rc::new("#/components/schemas/".to_string()),
             prefer_optional: false,
         };
