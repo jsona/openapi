@@ -1,18 +1,21 @@
 {
+  @jsonaschema("openapi")
   @openapi({
     openapi: "3.0.0",
     info: {
       title: "Sample Api",
       describe: "Optional",
-      version: "0.1.9",
+      version: "0.1.9"
     },
     servers: [
       {
-        url: "http://localhost:3000",
-      },
+        url: "http://localhost:3000"
+      }
     ],
     security: [
-      { jwt: [] }
+      {
+        jwt: []
+      }
     ],
     components: {
       securitySchemes: {
@@ -29,13 +32,13 @@
     req: {
       params: {
         b: "a",
-        d: 3,
+        d: 3
       },
       headers: {
-        'X-App-Key': 'Bearer Axxx...', @describe("x header")
+        'X-App-Key': 'Bearer Axxx...' @describe("x header")
       },
       query: {
-        kind: 'q', @optional
+        kind: 'q' @optional
       },
       body: { @describe("default content-type application/json")
         null: null,
@@ -43,18 +46,18 @@
         integer: 3, @optional
         float: 4.3,
         array1: [ @describe("a simple array")
-          '3',
+          '3'
         ],
         object1: { @def("object1")
           a: 3,
-          b: 4,
+          b: 4
         },
-        objectarray: [ @schema({maxItems: 3})
+        objectarray: [ @schema({maxItems:3})
           {
             a: 3
           }
         ],
-        time: '2018-11-13T20:20:39Z', @schema({format: "date-time"})
+        time: '2018-11-13T20:20:39Z' @schema({format:"date-time"})
       }
     },
     res: {
@@ -63,23 +66,23 @@
         integer: 3,
         float: 4.3,
         array1: [
-          '3',
+          '3'
         ],
         object1: {
           a: 3,
-          b: 4,
+          b: 4
         },
         object2: { @ref("object1")
         }
       },
       400: {
         code: "ErrNoModel",
-        message: "no model",
+        message: "no model"
       }
     }
   },
   endpoint2: { @endpoint({summary:"no req and res"})
-    route: "GET /endpoint2",
+    route: "GET /endpoint2"
   },
   endpoint3: { @endpoint({summary:"custom content-type"})
     route: "POST /endpoint3",
@@ -95,36 +98,14 @@
     res: {
       200: { @withHeader
         headers: {
-          'X-RateLimit': 10,
+          'X-RateLimit': 10
         },
         body: {
         }
       }
     }
   },
-  endpoint5: { @endpoint({summary:"combine schema"})
-    route: "POST /endpoint5",
-    req: {
-      body: {
-        combine1: [ @schemaCombine("anyOf")
-          { a: 3 },
-          { b: 'v' },
-        ] ,
-        combine2: [ @schemaCombine("oneOf")
-          { a: 3 },
-          { b: 'v' },
-        ],
-        combine3: [ @schemaCombine("allOf")
-          { a: 3 },
-          { b: 'v' },
-        ],
-      }
-    },
-    res: {
-      200: "",
-    }
-  },
-  endpoint6: { @endpoint({summary:"operation x-*","x-swagger-router-controller":"OrderController"})
-    route: "GET /endpoint6",
+  endpoint5: { @endpoint({summary:"operation x-*","x-swagger-router-controller":"OrderController"})
+    route: "GET /endpoint6"
   }
 }

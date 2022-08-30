@@ -1,13 +1,14 @@
 {
-    @openapi({
-        "openapi": "3.0.2",
-        "servers": [
-            {
-                "url": "/v3"
-            }
-        ],
-        "info": {
-            "description": `
+  @jsonaschema("openapi")
+  @openapi({
+    "openapi": "3.0.2",
+    "servers": [
+      {
+        "url": "/v3"
+      }
+    ],
+    "info": {
+      "description": `
 This is a sample Pet Store Server based on the OpenAPI 3.0 specification. 
 You can find out more about
 
@@ -28,356 +29,356 @@ repository](https://github.com/swagger-api/swagger-petstore)
 
 - [The source API definition for the Pet
 Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)`,
-            "version": "1.0.6-SNAPSHOT",
-            "title": "Swagger Petstore - OpenAPI 3.0",
-            "termsOfService": "http://swagger.io/terms/",
-            "contact": {
-                "email": "apiteam@swagger.io"
-            },
-            "license": {
-                "name": "Apache 2.0",
-                "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      "version": "1.0.6-SNAPSHOT",
+      "title": "Swagger Petstore - OpenAPI 3.0",
+      "termsOfService": "http://swagger.io/terms/",
+      "contact": {
+        "email": "apiteam@swagger.io"
+      },
+      "license": {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+    },
+    "tags": [
+      {
+        "name": "pet",
+        "description": "Everything about your Pets",
+        "externalDocs": {
+          "description": "Find out more",
+          "url": "http://swagger.io"
+        }
+      },
+      {
+        "name": "store",
+        "description": "Operations about user"
+      },
+      {
+        "name": "user",
+        "description": "Access to Petstore orders",
+        "externalDocs": {
+          "description": "Find out more about our store",
+          "url": "http://swagger.io"
+        }
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "petstore_auth": {
+          "type": "oauth2",
+          "flows": {
+            "implicit": {
+              "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
+              "scopes": {
+                "write:pets": "modify pets in your account",
+                "read:pets": "read your pets"
+              }
             }
+          }
         },
-        "tags": [
-            {
-                "name": "pet",
-                "description": "Everything about your Pets",
-                "externalDocs": {
-                    "description": "Find out more",
-                    "url": "http://swagger.io"
-                }
-            },
-            {
-                "name": "store",
-                "description": "Operations about user"
-            },
-            {
-                "name": "user",
-                "description": "Access to Petstore orders",
-                "externalDocs": {
-                    "description": "Find out more about our store",
-                    "url": "http://swagger.io"
-                }
-            }
+        "api_key": {
+          "type": "apiKey",
+          "name": "api_key",
+          "in": "header"
+        }
+      }
+    }
+  })
+  addPet: { @endpoint({summary:"Add a new pet to store",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
+    route: "POST /pet",
+    req: {
+      body: { @def("Pet")
+        id: 10,
+        name: "doggie",
+        category: { @def("Category")
+          id: 1,
+          name: "Dogs"
+        },
+        photoUrls: [
+          "<url:img>"
         ],
-        "components": {
-            "securitySchemes": {
-                "petstore_auth": {
-                    "type": "oauth2",
-                    "flows": {
-                        "implicit": {
-                            "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
-                            "scopes": {
-                            "write:pets": "modify pets in your account",
-                            "read:pets": "read your pets"
-                            }
-                        }
-                    }
-                },
-                "api_key": {
-                    "type": "apiKey",
-                    "name": "api_key",
-                    "in": "header"
-                }
-            }
-        }
-    })
-    addPet: { @endpoint({summary:"Add a new pet to store",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
-        route: "POST /pet",
-        req: {
-            body: { @def("Pet")
-                id: 10,
-                name: "doggie",
-                category: { @def("Category")
-                    id: 1,
-                    name: "Dogs",
-                },
-                photoUrls: [
-                    "<url:img>",
-                ],
-                tags: [ @def("Tag")
-                    {
-                        id: 1,
-                        name: "dog",
-                    }
-                ],
-                status: "available", @schema({enum:["available", "pending", "sold"]})
-            }
-        },
-        res: {
-            200: { @ref("Pet")
+        tags: [ @def("Tag")
+          {
+            id: 1,
+            name: "dog"
+          }
+        ],
+        status: "available" @schema({enum:["available","pending","sold"]})
+      }
+    },
+    res: {
+      200: { @ref("Pet")
 
-            }
-        }
+      }
+    }
+  },
+  updatePet: { @endpoint({summary:"Update an existing pet",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
+    route: "PUT /pet",
+    req: {
+      body: { @ref("Pet")
+      }
     },
-    updatePet: { @endpoint({summary:"Update an existing pet",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
-        route: "PUT /pet",
-        req: {
-            body: { @ref("Pet")
-            }
+    res: {
+      200: { @ref("Pet")
+      },
+      400: "", @describe("Invalid ID supplied")
+      404: "", @describe("Pet not found")
+      405: "" @describe("Validation exception")
+    }
+  },
+  findPetsByStatus: { @endpoint({summary:"Finds Pets by status",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
+    route: "GET /pet/findByStatus",
+    req: {
+      query: {
+        status: "available" @optional @schema({enum:["available","pending","sold"],default:"available"})
+      }
+    },
+    res: {
+      200: [
+        {} @ref("Pet")
+      ]
+    }
+  },
+  findPetsByTags: { @endpoint({summary:"Finds Pets by tags",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
+    route: "GET /pet/findByTags",
+    req: {
+      query: {
+        status: [ @optional
+          "Dog"
+        ]
+      }
+    },
+    res: {
+      200: [
+        {} @ref("Pet")
+      ]
+    }
+  },
+  getPetById: { @endpoint({summary:"Find pet by ID",tags:["pet"],security:[{api_key:[],petstore_auth:["write:pets","read:pets"]}]})
+    route: "GET /pet/{}",
+    req: {
+      params: {
+        petId: 3
+      }
+    },
+    res: {
+      200: { @ref("Pet")
+      }
+    }
+  },
+  updatePetWithForm: { @endpoint({summary:"Updates a pet in the store with form data",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
+    route: "POST /pet/{}",
+    req: {
+      params: {
+        petId: 3
+      },
+      query: {
+        name: "Jam",
+        status: "sold"
+      }
+    },
+    res: {
+      405: "" @describe("Invalid input")
+    }
+  },
+  deletePet: { @endpoint({summary:"Deletes a pet",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
+    route: "DELETE /pet/{}",
+    req: {
+      params: {
+        petId: 3
+      },
+      headers: {
+        api_key: ''
+      }
+    },
+    res: {
+      400: "" @describe("Invalid pet value")
+    }
+  },
+  uploadPetImage: { @endpoint({summary:"Uploads an pet image",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
+    route: "POST /pet/{}/uploadImage",
+    req: {
+      params: {
+        petId: 3
+      },
+      query: {
+        additionalMetadata: ""
+      },
+      body: "" @contentType("application/octet-stream") @schema({format:"binary"})
+    },
+    res: {
+      200: { @def("ApiResponse")
+        code: 0,
+        message: "OK"
+      }
+    }
+  },
+  getInventory: {
+    @endpoint({
+      summary: "Returns pet inventories by status",
+      tags: ["store"],
+      security: [{api_key:[]}],
+      "x-swagger-router-controller": "OrderController"
+    })
+    route: "POST /store/inventory",
+    req: {
+    },
+    res: {
+      200: {
+        additionalProperties: 0
+      }
+    }
+  },
+  placeOrder: {
+    @endpoint({
+      summary: "Returns pet inventories by status",
+      tags: ["store"],
+      "x-swagger-router-controller": "OrderController"
+    })
+    route: "POST /store/order",
+    req: {
+      body: { @def("Order")
+        id: 10,
+        petId: 198772,
+        quantity: 7,
+        shipDate: "2020-10-30T08:24:17.882Z",
+        status: "approved",
+        complete: true
+      }
+    },
+    res: {
+      200: { @ref("Order")
+      }
+    }
+  },
+  getOrderById: {
+    @endpoint({
+      summary: "Find purchase order by ID",
+      tags: ["store"],
+      "x-swagger-router-controller": "OrderController"
+    })
+    route: "GET /store/order/{}",
+    req: {
+      params: {
+        orderId: 13
+      }
+    },
+    res: {
+      200: { @ref("Order")
+      },
+      400: "", @describe("Invalid ID supplied")
+      404: "" @describe("Order not found")
+    }
+  },
+  deleteOrder: {
+    @endpoint({
+      summary: "Delete purchase order by ID",
+      tags: ["store"],
+      "x-swagger-router-controller": "OrderController"
+    })
+    route: "DELETE /store/order/{}",
+    req: {
+      params: {
+        orderId: 13
+      }
+    },
+    res: {
+      400: "", @describe("Invalid ID supplied")
+      404: "" @describe("Order not found")
+    }
+  },
+  createUser: { @endpoint({summary:"Create user",tags:["user"]})
+    route: "POST /user",
+    req: {
+      body: { @def("User")
+        "id": 10,
+        "username": "theUser",
+        "firstName": "John",
+        "lastName": "James",
+        "email": "john@email.com",
+        "password": "12345",
+        "phone": "12345",
+        "userStatus": 1
+      }
+    },
+    res: {
+      200: { @ref("User")
+      }
+    }
+  },
+  createUsersWithListInput: { @endpoint({summary:"Create user",tags:["user"]})
+    route: "POST /user/createWithList",
+    req: {
+      body: [
+        {} @ref("User")
+      ]
+    },
+    res: {
+      200: { @ref("User")
+      }
+    }
+  },
+  loginUser: { @endpoint({summary:"Logs user into the system",tags:["user"]})
+    route: "GET /user/login",
+    req: {
+      query: {
+        username: "Jonh",
+        password: "12345"
+      }
+    },
+    res: {
+      200: { @withHeader
+        headers: {
+          'X-Rate-Limit': 10, @describe("calls per hour allowed by the user")
+          'X-Expires-After': '<datetime' @describe("date in UTC when toekn expires") @schema({format:"date-time"})
         },
-        res: {
-            200: { @ref("Pet")
-            },
-            400: "", @describe("Invalid ID supplied")
-            404: "", @describe("Pet not found")
-            405: "", @describe("Validation exception")
-        }
+        body: ""
+      }
+    }
+  },
+  logoutUser: { @endpoint({summary:"Logs out current logged in user session",tags:["user"]})
+    route: "GET /user/logout",
+    req: {
     },
-    findPetsByStatus: { @endpoint({summary:"Finds Pets by status",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
-        route: "GET /pet/findByStatus",
-        req: {
-            query: {
-                status: "available", @optional @schema({enum:["available","pending","sold"],default:"available"})
-            },
-        },
-        res: {
-            200: [
-                {}, @ref("Pet")
-            ]
-        }
+    res: {
+      200: ""
+    }
+  },
+  getUserByName: { @endpoint({summary:"Get user by user name",tags:["user"]})
+    route: "GET /user/{}",
+    req: {
+      params: {
+        username: "Jonh"
+      }
     },
-    findPetsByTags: { @endpoint({summary:"Finds Pets by tags",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
-        route: "GET /pet/findByTags",
-        req: {
-            query: {
-                status: [  @optional 
-                    "Dog"
-                ],
-            },
-        },
-        res: {
-            200: [
-                {}, @ref("Pet")
-            ]
-        }
+    res: {
+      200: { @ref("User")
+      }
+    }
+  },
+  updateUser: { @endpoint({summary:"Update user",tags:["user"]})
+    route: "PUT /user/{}",
+    req: {
+      params: {
+        username: "Jonh"
+      },
+      body: { @ref("User")
+      }
     },
-    getPetById: { @endpoint({summary:"Find pet by ID",tags:["pet"],security:[{api_key:[],petstore_auth:["write:pets","read:pets"]}]})
-        route: "GET /pet/{}",
-        req: {
-            params: {
-                petId: 3,
-            }
-        },
-        res: {
-            200: { @ref("Pet")
-            }
-        }
+    res: {
+      200: ""
+    }
+  },
+  deleteUser: { @endpoint({summary:"Delete user",tags:["user"]})
+    route: "DELETE /user/{}",
+    req: {
+      params: {
+        username: "Jonh"
+      }
     },
-    updatePetWithForm: { @endpoint({summary:"Updates a pet in the store with form data",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
-        route: "POST /pet/{}",
-        req: {
-            params: {
-                petId: 3,
-            },
-            query: {
-                name: "Jam",
-                status: "sold",
-            }
-        },
-        res: {
-            405: "", @describe("Invalid input")
-        }
-    },
-    deletePet: { @endpoint({summary:"Deletes a pet",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
-        route: "DELETE /pet/{}",
-        req: {
-            params: {
-                petId: 3,
-            },
-            headers: {
-                api_key: '',
-            }
-        },
-        res: {
-            400: "", @describe("Invalid pet value")
-        }
-    },
-    uploadPetImage: { @endpoint({summary:"Uploads an pet image",tags:["pet"],security:[{petstore_auth:["write:pets","read:pets"]}]})
-        route: "POST /pet/{}/uploadImage",
-        req: {
-            params: {
-                petId: 3,
-            },
-            query: {
-                additionalMetadata: "",
-            },
-            body: "", @contentType("application/octet-stream") @schema({format:"binary"})
-        },
-        res: {
-            200: { @def("ApiResponse")
-                code: 0,
-                message: "OK",
-            }
-        }
-    },
-    getInventory: { 
-        @endpoint({
-            summary:"Returns pet inventories by status",
-            tags:["store"],
-            security:[{api_key:[]}],
-            "x-swagger-router-controller":"OrderController"
-        })
-        route: "POST /store/inventory",
-        req: {
-        },
-        res: {
-            200: {
-                additionalProperties: 0,
-            }
-        }
-    },
-    placeOrder: { 
-        @endpoint({
-            summary:"Returns pet inventories by status",
-            tags:["store"],
-            "x-swagger-router-controller":"OrderController"
-        }) 
-        route: "POST /store/order",
-        req: {
-            body: { @def("Order")
-                id: 10,
-                petId: 198772,
-                quantity: 7,
-                shipDate: "2020-10-30T08:24:17.882Z",
-                status: "approved",
-                complete: true,
-            }
-        },
-        res: {
-            200: { @ref("Order")
-            }
-        }
-    },
-    getOrderById: {
-        @endpoint({
-            summary:"Find purchase order by ID",
-            tags:["store"],
-            "x-swagger-router-controller":"OrderController"
-        }) 
-        route: "GET /store/order/{}",
-        req: {
-            params: {
-                orderId: 13,
-            }
-        },
-        res: {
-            200: { @ref("Order")
-            },
-            400: "", @describe("Invalid ID supplied")
-            404: "", @describe("Order not found")
-        }
-    },
-    deleteOrder: {
-        @endpoint({
-            summary:"Delete purchase order by ID",
-            tags:["store"],
-            "x-swagger-router-controller":"OrderController"
-        }) 
-        route: "DELETE /store/order/{}",
-        req: {
-            params: {
-                orderId: 13,
-            }
-        },
-        res: {
-            400: "", @describe("Invalid ID supplied")
-            404: "", @describe("Order not found")
-        }
-    },
-    createUser: { @endpoint({summary:"Create user",tags:["user"]})
-        route: "POST /user",
-        req: {
-            body: { @def("User")
-                "id": 10,
-                "username": "theUser",
-                "firstName": "John",
-                "lastName": "James",
-                "email": "john@email.com",
-                "password": "12345",
-                "phone": "12345",
-                "userStatus": 1
-            },
-        },
-        res: {
-            200: { @ref("User")
-            }
-        }
-    },
-    createUsersWithListInput: { @endpoint({summary:"Create user",tags:["user"]})
-        route: "POST /user/createWithList",
-        req: {
-            body: [
-                {}, @ref("User")
-            ]
-        },
-        res: {
-            200: { @ref("User")
-            }
-        }
-    },
-    loginUser: { @endpoint({summary:"Logs user into the system",tags:["user"]})
-        route: "GET /user/login",
-        req: {
-            query: {
-                username: "Jonh",
-                password: "12345",
-            },
-        },
-        res: {
-            200: { @withHeader
-                headers: {
-                    'X-Rate-Limit': 10, @describe("calls per hour allowed by the user")
-                    'X-Expires-After': '<datetime', @describe("date in UTC when toekn expires") @schema({format:"date-time"})
-                },
-                body: "",
-            }
-        }
-    },
-    logoutUser: { @endpoint({summary:"Logs out current logged in user session",tags:["user"]})
-        route: "GET /user/logout",
-        req: {
-        },
-        res: {
-            200: "",
-        }
-    },
-    getUserByName: { @endpoint({summary:"Get user by user name",tags:["user"]})
-        route: "GET /user/{}",
-        req: {
-            params: {
-                username: "Jonh",
-            }
-        },
-        res: {
-            200: { @ref("User")
-            }
-        }
-    },
-    updateUser: { @endpoint({summary:"Update user",tags:["user"]})
-        route: "PUT /user/{}",
-        req: {
-            params: {
-                username: "Jonh",
-            },
-            body: { @ref("User")
-            }
-        },
-        res: {
-            200: "",
-        }
-    },
-    deleteUser: { @endpoint({summary:"Delete user",tags:["user"]}) 
-        route: "DELETE /user/{}",
-        req: {
-            params: {
-                username: "Jonh",
-            },
-        },
-        res: {
-            400: "", @describe("Invalid username supplied")
-            404: "", @describe("User not found")
-        }
-    },
+    res: {
+      400: "", @describe("Invalid username supplied")
+      404: "" @describe("User not found")
+    }
+  }
 }
