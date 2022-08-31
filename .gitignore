@@ -1,2 +1,6 @@
 /target
 /.vscode
+dist
+node_modules
+*.log
+/js/**/yarn.lock

@@ -1,25 +1,17 @@
 mod openapi;
 
-use std::{
-    cell::RefCell, collections::HashSet, convert::TryFrom, fmt::Display, rc::Rc, str::FromStr,
-};
+use std::{cell::RefCell, collections::HashSet, convert::TryFrom, fmt::Display, rc::Rc};
 
 use indexmap::IndexMap;
-use jsona::dom::{self, Key, KeyOrIndex, Keys, Node, Object};
-use jsona_schema::{SchemaError, SchemaParser};
-use serde_json::Value;
-use thiserror::Error;
-
+use jsona::{
+    dom::{Key, KeyOrIndex, Keys, Node, Object},
+    error::ErrorObject,
+    util::mapper::Mapper,
+};
 pub use jsona_schema::Schema;
+use jsona_schema::{SchemaError, SchemaParser};
 pub use openapi::*;
-
-#[derive(Clone, Debug, Error)]
-pub enum Error {
-    #[error("invalid jsona")]
-    InvalidJsona(#[from] dom::ParseError),
-    #[error("invalid openapi")]
-    InvalidOpenapi { errors: Vec<OpenapiError> },
-}
+use serde_json::Value;
 
 #[derive(Clone, Debug)]
 pub struct OpenapiError {
@@ -33,6 +25,14 @@ impl OpenapiError {
             keys,
             message: message.to_string(),
         }
+    }
+    pub fn to_error_object(&self, node: &Node, mapper: &Mapper) -> ErrorObject {
+        let message = self.message.clone();
+        ErrorObject::new(
+            "InvalidOpenapi",
+            message,
+            self.keys.mapper_range(node, mapper),
+        )
     }
 }
 
@@ -56,14 +56,6 @@ impl Display for OpenapiError {
 }
 
 type OpenapiResult<T> = std::result::Result<T, OpenapiError>;
-
-impl FromStr for Openapi {
-    type Err = Error;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let node: Node = s.parse()?;
-        OpenapiParser::parse(&node).map_err(|errors| Error::InvalidOpenapi { errors })
-    }
-}
 
 impl TryFrom<&Node> for Openapi {
     type Error = Vec<OpenapiError>;
