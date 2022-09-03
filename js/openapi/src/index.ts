@@ -2,24 +2,24 @@ import loadCrate from "../../../crates/jsona-wasm-openapi/Cargo.toml";
 import { ParseResult } from "./types";
 export * as types from "./types";
 
-export class JsonaOpenapi {
+export default class JsonaOpenapi {
   private static crate: any | undefined;
-  private static initializing: boolean = false;
+  private static guard: boolean = false;
   private constructor() {
-    if (!JsonaOpenapi.initializing) {
+    if (!JsonaOpenapi.guard) {
       throw new Error(
-        `an instance of JsonaOpenapi can only be created by calling the "initialize" static method`
+        `an instance of JsonaOpenapi can only be created by calling the "getInstance" static method`
       );
     }
   }
 
-  public static async init(): Promise<JsonaOpenapi> {
+  public static async getInstance(): Promise<JsonaOpenapi> {
     if (typeof JsonaOpenapi.crate === "undefined") {
       JsonaOpenapi.crate = await loadCrate();
     }
-    JsonaOpenapi.initializing = true;
+    JsonaOpenapi.guard = true;
     const self = new JsonaOpenapi();
-    JsonaOpenapi.initializing = false;
+    JsonaOpenapi.guard = false;
     return self;
   }
 
@@ -29,7 +29,7 @@ export class JsonaOpenapi {
    */
   public parse(jsona: string): ParseResult {
     try {
-      return { openapi: JsonaOpenapi.crate.parse(jsona) }
+      return { value: JsonaOpenapi.crate.parse(jsona) }
     } catch (errors) {
       return { errors: errors }
     }

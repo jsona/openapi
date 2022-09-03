@@ -18,7 +18,7 @@ export interface ErrorObject {
 }
 
 export interface ParseResult {
-  openapi?: Openapi.Document,
+  value?: Openapi.Document,
   errors?: ErrorObject[],
 }
 
