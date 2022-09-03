@@ -4,6 +4,7 @@
   "author": "Sigoden Huang <sigoden@gmail.com>",
   "description": "A openapi dsl in jsona",
   "main": "dist/index.js",
+  "keywords": ["jsona", "openapi"],
   "files": [
     "dist"
   ],
