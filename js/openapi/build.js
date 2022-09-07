@@ -1,8 +1,9 @@
-const fs = require("fs");
+const CREATE = "jsona-wasm-openapi";
 
+const fs = require("fs");
 const p = v => require("path").resolve(__dirname, v);
 const $ = v => require("child_process").execSync(v, { stdio: "inherit" });
-const cratePath = p("../../crates/jsona-wasm-openapi");
+const cratePath = p(`../../crates/${CREATE}`);
 
 $(`wasm-pack build --out-name index ${cratePath}`);
 [
