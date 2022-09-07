@@ -3,4 +3,8 @@
 dist
 node_modules
 *.log
-/js/**/yarn.lock
+yarn.lock
+pkg
+js/*/index_bg.*
+js/*/index_web.js
+js/*/index.js
