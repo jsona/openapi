@@ -16,10 +16,11 @@ export namespace OpenapiTypes {
   export interface Position {
     index: number;
     line: number;
-    character: number;
+    column: number;
   }
 
   export interface ErrorObject {
+    source: string,
     kind: string,
     message: string,
     range?: Range,

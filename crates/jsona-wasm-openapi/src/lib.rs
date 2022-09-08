@@ -1,8 +1,8 @@
 use jsona::{dom::Node, error::ErrorObject, util::mapper::Mapper};
 use jsona_openapi::Openapi;
+use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use wasm_bindgen::prelude::*;
-use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 struct ParseResult {
@@ -19,7 +19,8 @@ pub fn parse(input: &str) -> JsValue {
             return JsValue::from_serde(&ParseResult {
                 value: None,
                 errors: Some(err.to_error_objects(&mapper)),
-            }).unwrap()
+            })
+            .unwrap()
         }
     };
     let result = match Openapi::try_from(&node) {
@@ -36,5 +37,5 @@ pub fn parse(input: &str) -> JsValue {
             ),
         },
     };
-	JsValue::from_serde(&result).unwrap()
+    JsValue::from_serde(&result).unwrap()
 }

@@ -9,9 +9,11 @@ use jsona::{
     util::mapper::Mapper,
 };
 pub use jsona_schema::Schema;
-use jsona_schema::{SchemaError, SchemaParser};
+use jsona_schema::SchemaParser;
 pub use openapi::*;
 use serde_json::Value;
+
+const ERROR_SOURCE: &str = "openapi";
 
 #[derive(Clone, Debug)]
 pub struct OpenapiError {
@@ -29,19 +31,11 @@ impl OpenapiError {
     pub fn to_error_object(&self, node: &Node, mapper: &Mapper) -> ErrorObject {
         let message = self.message.clone();
         ErrorObject::new(
+            ERROR_SOURCE,
             "InvalidOpenapi",
             message,
             self.keys.mapper_range(node, mapper),
         )
-    }
-}
-
-impl From<SchemaError> for OpenapiError {
-    fn from(err: SchemaError) -> Self {
-        Self {
-            keys: err.keys().clone(),
-            message: err.to_string(),
-        }
     }
 }
 
@@ -106,7 +100,7 @@ impl OpenapiParser {
 
     fn parse_openapi(errors: &mut Vec<OpenapiError>, value: &Node) -> Openapi {
         let mut spec = Openapi {
-            openapi: "3.0".into(),
+            openapi: "3.0.0".into(),
             info: Info {
                 title: "openapi".into(),
                 version: "0.1.0".into(),
@@ -241,10 +235,18 @@ impl OpenapiParser {
                 let pathname = self.parse_req_params(operation, &keys, &value, path_parts)?;
                 for (key, value) in value.value().read().iter() {
                     match key.value() {
-                        "query" | "headers" => {
+                        "query" => {
                             self.parse_req_parameters(
                                 operation,
-                                key.value(),
+                                "query",
+                                &keys.join(key.clone()),
+                                value,
+                            )?;
+                        }
+                        "headers" => {
+                            self.parse_req_parameters(
+                                operation,
+                                "header",
                                 &keys.join(key.clone()),
                                 value,
                             )?;
@@ -529,7 +531,9 @@ impl OpenapiParser {
             ref_prefix: Rc::new("#/components/schemas/".to_string()),
             prefer_optional: false,
         };
-        let mut schema = scope.parse()?;
+        let mut schema = scope
+            .parse()
+            .map_err(|_| OpenapiError::new(keys.clone(), "invalid schema"))?;
         schema.description = None;
         Ok(schema)
     }
