@@ -345,7 +345,7 @@ expression: output
           },
           {
             "name": "api_key",
-            "in": "headers",
+            "in": "header",
             "required": true,
             "schema": {
               "type": "string"

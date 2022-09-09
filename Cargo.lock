@@ -171,8 +171,9 @@ checksum = "6c8af84674fe1f223a982c933a0ee1086ac4d4052aa0fb8060c12c6ad838e754"
 
 [[package]]
 name = "jsona"
-version = "0.5.0"
-source = "git+https://github.com/jsona/jsona#261197855e576ed0da92db40c5f50037f49454aa"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "119c926a47b8f61cf485e636a6225afa2ce8d74db3e5e4f46a018604006f2993"
 dependencies = [
  "arc-swap",
  "indexmap",
@@ -200,8 +201,9 @@ dependencies = [
 
 [[package]]
 name = "jsona-schema"
-version = "0.2.0"
-source = "git+https://github.com/jsona/jsona#261197855e576ed0da92db40c5f50037f49454aa"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8c7e5bd745a2250799b2d7cc5ab95f5c09b3dd064b6f4367cfccea9c11372034"
 dependencies = [
  "either",
  "fancy-regex",

@@ -42,7 +42,7 @@ expression: output
           },
           {
             "name": "X-App-Key",
-            "in": "headers",
+            "in": "header",
             "description": "x header",
             "required": true,
             "schema": {

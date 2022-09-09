@@ -12,8 +12,8 @@ readme = "_README.md"
 
 
 [dependencies]
-jsona = { git = "https://github.com/jsona/jsona", version = "0.5" }
-jsona-schema = { git = "https://github.com/jsona/jsona", version = "0.2" }
+jsona = { version = "0.6" }
+jsona-schema = { version = "0.3" }
 thiserror = "1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
