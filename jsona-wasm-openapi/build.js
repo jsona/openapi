@@ -9,7 +9,7 @@ $(`wasm-pack build --out-name index`);
   "package.json",
   "README.md",
 ].forEach(name => {
-  fs.copyFileSync(p("assets/"+ name), p("pkg/" + name));
+  fs.copyFileSync(p(name), p("pkg/" + name));
 });
 $(`npx wasm-pack-utils node ${p("pkg/index_bg.js")} -o ${p("pkg/index.js")}`);
 $(`npx wasm-pack-utils web ${p("pkg/index_bg.js")} -o ${p("pkg/index_web.js")}`);
